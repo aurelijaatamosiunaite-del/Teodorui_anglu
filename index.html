@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3 — Vocabulary Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0a1628 100%);
+    color: #e8e8e8;
+    min-height: 100vh;
+  }
+  .container { max-width: 640px; margin: 0 auto; padding: 24px 20px; }
+  
+  /* Header */
+  .header { text-align: center; margin-bottom: 32px; }
+  .header h1 {
+    font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #4ECDC4, #60A5FA);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+
+  /* Day Cards */
+  .day-card {
+    background: linear-gradient(135deg, #0f3460dd, #0f346099);
+    border-radius: 16px; padding: 20px 24px; margin-bottom: 16px;
+    cursor: pointer; border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.25s ease;
+  }
+  .day-card:hover {
+    transform: translateY(-2px);
+    border-color: #4ECDC4;
+    box-shadow: 0 8px 32px #4ECDC422;
+  }
+  .day-card .top { display: flex; align-items: center; justify-content: space-between; }
+  .day-card .day-title { font-size: 20px; font-weight: 700; }
+  .day-card .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+  }
+  .day-card .day-subtitle { font-size: 14px; color: #4ECDC4; font-weight: 600; margin-bottom: 8px; margin-top: 2px; }
+  .day-card .day-desc { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+
+  .color-mint { color: #4ECDC4; }
+  .color-yellow { color: #FFE66D; }
+  .color-coral { color: #FF6B6B; }
+  .bg-mint { background: #4ECDC422; color: #4ECDC4; }
+  .bg-yellow { background: #FFE66D22; color: #FFE66D; }
+  .bg-coral { background: #FF6B6B22; color: #FF6B6B; }
+
+  /* Browse button */
+  .browse-btn {
+    background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px 24px;
+    cursor: pointer; border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.25s ease; text-align: center; margin-top: 24px;
+  }
+  .browse-btn:hover { border-color: #4ECDC4; transform: translateY(-2px); }
+  .browse-btn span { font-size: 15px; font-weight: 600; color: #94a3b8; }
+
+  /* Back button */
+  .back-btn {
+    background: none; border: none; color: #94a3b8; font-size: 14px;
+    cursor: pointer; font-family: inherit; padding: 8px 0; margin-bottom: 16px;
+  }
+  .back-btn:hover { color: #e8e8e8; }
+
+  /* Quiz */
+  .counter { text-align: center; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+  .retry-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #FF6B6B22; color: #FF6B6B; margin-left: 8px; }
+  .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #4ECDC4, #60A5FA); border-radius: 3px; transition: width 0.4s ease; }
+  .stats-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; }
+  .stat { font-size: 16px; font-weight: 700; }
+
+  .quiz-card {
+    background: linear-gradient(145deg, #0f3460ee, #0f3460bb);
+    border-radius: 20px; padding: 32px 28px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+  }
+  .direction-tag {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-bottom: 16px;
+  }
+  .dir-de-en { background: #FFE66D22; color: #FFE66D; }
+  .dir-en-de { background: #A78BFA22; color: #A78BFA; }
+
+  .prompt { font-size: 26px; font-weight: 700; margin-bottom: 24px; line-height: 1.3; }
+
+  .input-row { display: flex; gap: 10px; }
+  .quiz-input {
+    flex: 1; padding: 14px 18px; border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.3); color: #e8e8e8;
+    font-size: 18px; font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .quiz-input:focus { border-color: #60A5FA; }
+  .quiz-input.correct { border-color: #4ECDC4; }
+  .quiz-input.wrong { border-color: #FF6B6B; }
+  .quiz-input:disabled { opacity: 0.7; }
+
+  .btn {
+    padding: 14px 24px; border-radius: 12px; border: none;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: all 0.2s; white-space: nowrap;
+  }
+  .btn:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-yellow { background: #FFE66D; color: #000; }
+  .btn-mint { background: #4ECDC4; color: #000; }
+  .btn-coral { background: #FF6B6B; color: #000; }
+
+  .feedback-box {
+    margin-top: 16px; padding: 14px 18px; border-radius: 12px;
+  }
+  .feedback-correct { background: #4ECDC415; border: 1px solid #4ECDC433; }
+  .feedback-wrong { background: #FF6B6B15; border: 1px solid #FF6B6B33; }
+  .feedback-text { font-size: 15px; font-weight: 600; }
+  .correct-answer { font-size: 14px; color: #94a3b8; margin-top: 6px; }
+
+  /* Results */
+  .results-card {
+    background: linear-gradient(145deg, #0f3460ee, #0f3460bb);
+    border-radius: 20px; padding: 28px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .big-score {
+    font-size: 56px; font-weight: 800;
+    background: linear-gradient(135deg, #4ECDC4, #FFE66D);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+
+  .wrong-list { text-align: left; margin-top: 20px; }
+  .wrong-list h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #FF6B6B; }
+  .wrong-item {
+    padding: 10px 14px; border-radius: 10px;
+    background: rgba(255,107,107,0.08); margin-bottom: 8px;
+    font-size: 14px; border: 1px solid rgba(255,107,107,0.15);
+  }
+
+  /* Browse */
+  .browse-group { margin-bottom: 20px; }
+  .browse-group-title {
+    font-size: 14px; font-weight: 700; color: #4ECDC4;
+    margin-bottom: 8px; padding: 4px 12px;
+    background: #4ECDC411; border-radius: 8px; display: inline-block;
+  }
+  .browse-item {
+    display: flex; justify-content: space-between; padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px;
+  }
+  .browse-item .en { color: #FFE66D; }
+  .browse-item .de { color: #94a3b8; }
+
+  @media (max-width: 480px) {
+    .container { padding: 16px 14px; }
+    .prompt { font-size: 22px; }
+    .quiz-input { font-size: 16px; padding: 12px 14px; }
+    .btn { padding: 12px 18px; font-size: 15px; }
+    .quiz-card { padding: 24px 20px; }
+    .big-score { font-size: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app" class="container"></div>
+
+<script>
+// ============ VOCABULARY DATA ============
+const ALL_VOCAB = [
+  // Part A
+  { en: "to ask sb. to do sth.", de: "jemanden bitten, etwas zu tun", group: 1, partLabel: "A" },
+  { en: "to try", de: "(aus)probieren, versuchen", group: 1, partLabel: "A" },
+  { en: "table", de: "Tabelle", group: 1, partLabel: "A" },
+  { en: "to need", de: "brauchen, benötigen", group: 1, partLabel: "A" },
+  { en: "guitar", de: "Gitarre", group: 1, partLabel: "A" },
+  { en: "beach", de: "Strand", group: 1, partLabel: "A" },
+  { en: "outside", de: "draußen, nach draußen", group: 1, partLabel: "A" },
+  { en: "inside", de: "drinnen, nach drinnen", group: 1, partLabel: "A" },
+  { en: "jump", de: "Sprung", group: 1, partLabel: "A" },
+  { en: "letter", de: "Brief", group: 1, partLabel: "A" },
+  // Part B
+  { en: "to finish sth.", de: "etwas beenden, fertig werden", group: 2, partLabel: "B" },
+  { en: "Come on, Dad.", de: "Na los, Dad! / Komm, Dad!", group: 2, partLabel: "B" },
+  { en: "How are you?", de: "Wie geht's? / Wie geht es dir?", group: 2, partLabel: "B" },
+  { en: "to listen", de: "zuhören, horchen", group: 2, partLabel: "B" },
+  { en: "much", de: "viel", group: 2, partLabel: "B" },
+  { en: "job", de: "Job, Arbeitsstelle", group: 2, partLabel: "B" },
+  { en: "studio", de: "Studio", group: 2, partLabel: "B" },
+  { en: "programme", de: "Programm, Sendung", group: 2, partLabel: "B" },
+  { en: "later", de: "später", group: 2, partLabel: "B" },
+  { en: "midnight", de: "Mitternacht", group: 2, partLabel: "B" },
+  { en: "too (late/cold/big)", de: "zu (spät/kalt/groß)", group: 2, partLabel: "B" },
+  { en: "to get up", de: "aufstehen", group: 2, partLabel: "B" },
+  { en: "How do you like it?", de: "Wie findest du es? / Wie gefällt es dir?", group: 3, partLabel: "B" },
+  { en: "It's about ...", de: "Es geht um ... / Es handelt von ...", group: 3, partLabel: "B" },
+  { en: "to send sth. to sb.", de: "jm. etwas schicken, senden", group: 3, partLabel: "B" },
+  { en: "idea", de: "Idee, Vorstellung", group: 3, partLabel: "B" },
+  { en: "to hear", de: "hören", group: 3, partLabel: "B" },
+  { en: "partner", de: "Partner/in", group: 3, partLabel: "B" },
+  { en: "to interview sb.", de: "jn. interviewen, befragen", group: 3, partLabel: "B" },
+  { en: "age", de: "Alter", group: 3, partLabel: "B" },
+  { en: "also", de: "auch", group: 3, partLabel: "B" },
+  { en: "metre", de: "Meter", group: 3, partLabel: "B" },
+  // Part C
+  { en: "on Saturday afternoon", de: "am Samstagnachmittag", group: 4, partLabel: "C" },
+  { en: "to ride a bike", de: "Rad fahren", group: 4, partLabel: "C" },
+  { en: "bike", de: "Fahrrad", group: 4, partLabel: "C" },
+  { en: "to stop", de: "anhalten, stoppen", group: 4, partLabel: "C" },
+  { en: "tired", de: "müde", group: 4, partLabel: "C" },
+  { en: "to be thirsty", de: "durstig sein, Durst haben", group: 4, partLabel: "C" },
+  { en: "chocolate", de: "Schokolade", group: 4, partLabel: "C" },
+  { en: "usually", de: "meistens, normalerweise", group: 4, partLabel: "C" },
+  { en: "to turn sth. on", de: "etwas einschalten", group: 4, partLabel: "C" },
+  { en: "behind", de: "hinter", group: 4, partLabel: "C" },
+  { en: "in front of", de: "vor", group: 4, partLabel: "C" },
+  { en: "to turn around", de: "sich umdrehen", group: 4, partLabel: "C" },
+  { en: "ghost", de: "Geist, Gespenst", group: 4, partLabel: "C" },
+  { en: "ready", de: "bereit, fertig", group: 4, partLabel: "C" },
+  { en: "loud", de: "laut", group: 4, partLabel: "C" },
+];
+
+// ============ HELPERS ============
+const normalize = s => s.toLowerCase().replace(/[()!?.…]/g, "").replace(/\s+/g, " ").trim();
+
+function checkAnswer(input, correct) {
+  const ni = normalize(input);
+  if (!ni) return false;
+  const alts = correct.split(/[,/]/).map(a => normalize(a));
+  alts.push(normalize(correct));
+  return alts.some(alt => {
+    if (!alt) return false;
+    if (ni === alt) return true;
+    if (alt.includes(ni) && ni.length >= 3) return true;
+    if (ni.includes(alt) && alt.length >= 3) return true;
+    return false;
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestions(day) {
+  if (day === 1) {
+    const words = ALL_VOCAB.filter(w => [1, 2].includes(w.group));
+    return shuffle(words).map(w => ({ prompt: w.de, answer: w.en, direction: "de-en", word: w }));
+  } else if (day === 2) {
+    const newWords = ALL_VOCAB.filter(w => [3, 4].includes(w.group));
+    const newQs = shuffle(newWords).map(w => ({ prompt: w.de, answer: w.en, direction: "de-en", word: w }));
+    const reviewWords = ALL_VOCAB.filter(w => [1, 2].includes(w.group));
+    const reviewQs = shuffle([
+      ...reviewWords.map(w => ({ prompt: w.de, answer: w.en, direction: "de-en", word: w })),
+      ...reviewWords.map(w => ({ prompt: w.en, answer: w.de, direction: "en-de", word: w })),
+    ]);
+    return [...newQs, ...reviewQs.slice(0, 22)];
+  } else {
+    return shuffle([
+      ...ALL_VOCAB.map(w => ({ prompt: w.de, answer: w.en, direction: "de-en", word: w })),
+      ...ALL_VOCAB.map(w => ({ prompt: w.en, answer: w.de, direction: "en-de", word: w })),
+    ]);
+  }
+}
+
+const DAYS = [
+  { id: 1, title: "Tag 1", subtitle: "Parts A & B — Deutsch → Englisch", desc: "Lerne die ersten 22 Wörter. Du siehst das deutsche Wort und schreibst die englische Übersetzung.", color: "mint" },
+  { id: 2, title: "Tag 2", subtitle: "Parts B & C + Wiederholung", desc: "20 neue Wörter (Deutsch → Englisch) plus Wiederholung von Tag 1 in beiden Richtungen.", color: "yellow" },
+  { id: 3, title: "Tag 3", subtitle: "Alles! Beide Richtungen — Probetest", desc: "Alle Vokabeln, beide Richtungen, zufällige Reihenfolge. Wie im echten Test!", color: "coral" },
+];
+
+// ============ APP STATE ============
+let state = {
+  screen: "home",
+  day: null,
+  questions: [],
+  idx: 0,
+  input: "",
+  feedback: null,
+  correctAnswer: "",
+  score: { correct: 0, wrong: 0 },
+  wrongWords: [],
+  retryRound: 0,
+};
+
+function setState(patch) {
+  Object.assign(state, patch);
+  render();
+}
+
+// ============ ACTIONS ============
+function startDay(day) {
+  setState({
+    screen: "quiz", day, questions: buildQuestions(day),
+    idx: 0, input: "", feedback: null, correctAnswer: "",
+    score: { correct: 0, wrong: 0 }, wrongWords: [], retryRound: 0,
+  });
+}
+
+function startRetry() {
+  setState({
+    screen: "quiz", questions: shuffle(state.wrongWords.map(w => ({ ...w }))),
+    idx: 0, input: "", feedback: null, correctAnswer: "",
+    score: { correct: 0, wrong: 0 }, wrongWords: [],
+    retryRound: state.retryRound + 1,
+  });
+}
+
+function handleSubmit() {
+  if (state.feedback !== null) {
+    if (state.idx + 1 >= state.questions.length) {
+      setState({ screen: "results" });
+    } else {
+      setState({ idx: state.idx + 1, input: "", feedback: null, correctAnswer: "" });
+    }
+    return;
+  }
+  const q = state.questions[state.idx];
+  const isCorrect = checkAnswer(state.input, q.answer);
+  const newScore = { ...state.score };
+  const newWrong = [...state.wrongWords];
+  if (isCorrect) newScore.correct++; else { newScore.wrong++; newWrong.push(q); }
+  setState({ feedback: isCorrect ? "correct" : "wrong", correctAnswer: q.answer, score: newScore, wrongWords: newWrong });
+}
+
+// ============ RENDER ============
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function getWordCount(dayId) {
+  if (dayId === 1) return ALL_VOCAB.filter(w => [1,2].includes(w.group)).length;
+  if (dayId === 2) return ALL_VOCAB.length + ALL_VOCAB.filter(w => [1,2].includes(w.group)).length;
+  return ALL_VOCAB.length * 2;
+}
+
+function render() {
+  const app = document.getElementById("app");
+
+  if (state.screen === "home") {
+    app.innerHTML = `
+      <div class="header">
+        <h1>Unit 3 Vocabulary</h1>
+        <p>${ALL_VOCAB.length} Wörter · 3-Tage-Plan · Deutsch ↔ Englisch</p>
+      </div>
+      ${DAYS.map(d => `
+        <div class="day-card" onclick="startDay(${d.id})">
+          <div class="top">
+            <div class="day-title color-${d.color}">${d.title}</div>
+            <span class="badge bg-${d.color}">${getWordCount(d.id)} Fragen</span>
+          </div>
+          <div class="day-subtitle">${d.subtitle}</div>
+          <div class="day-desc">${d.desc}</div>
+        </div>
+      `).join("")}
+      <div class="browse-btn" onclick="setState({screen:'browse'})">
+        <span>📖 Alle Vokabeln ansehen</span>
+      </div>
+    `;
+    return;
+  }
+
+  if (state.screen === "browse") {
+    const groups = [
+      { label: "Part A", words: ALL_VOCAB.filter(w => w.partLabel === "A") },
+      { label: "Part B", words: ALL_VOCAB.filter(w => w.partLabel === "B") },
+      { label: "Part C", words: ALL_VOCAB.filter(w => w.partLabel === "C") },
+    ];
+    app.innerHTML = `
+      <button class="back-btn" onclick="setState({screen:'home'})">← Zurück</button>
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:20px">Alle Vokabeln — Unit 3</h2>
+      ${groups.map(g => `
+        <div class="browse-group">
+          <div class="browse-group-title">${g.label}</div>
+          ${g.words.map(w => `
+            <div class="browse-item">
+              <span class="en">${esc(w.en)}</span>
+              <span class="de">${esc(w.de)}</span>
+            </div>
+          `).join("")}
+        </div>
+      `).join("")}
+    `;
+    return;
+  }
+
+  if (state.screen === "quiz") {
+    const q = state.questions[state.idx];
+    const pct = ((state.idx + (state.feedback ? 1 : 0)) / state.questions.length) * 100;
+    const dirClass = q.direction === "de-en" ? "dir-de-en" : "dir-en-de";
+    const dirLabel = q.direction === "de-en" ? "🇩🇪 → 🇬🇧" : "🇬🇧 → 🇩🇪";
+    const inputClass = state.feedback === "correct" ? "correct" : state.feedback === "wrong" ? "wrong" : "";
+    const placeholder = q.direction === "de-en" ? "Type in English..." : "Auf Deutsch schreiben...";
+    const btnClass = state.feedback === null ? "btn-yellow" : "btn-mint";
+    const btnText = state.feedback === null ? "Check" : "Weiter →";
+
+    let feedbackHtml = "";
+    if (state.feedback === "correct") {
+      feedbackHtml = `<div class="feedback-box feedback-correct"><div class="feedback-text color-mint">✓ Richtig! Super!</div></div>`;
+    } else if (state.feedback === "wrong") {
+      feedbackHtml = `<div class="feedback-box feedback-wrong"><div class="feedback-text color-coral">✗ Leider falsch</div><div class="correct-answer">Richtige Antwort: <strong>${esc(state.correctAnswer)}</strong></div></div>`;
+    }
+
+    app.innerHTML = `
+      <button class="back-btn" onclick="setState({screen:'home'})">← Abbrechen</button>
+      <div class="counter">
+        Frage ${state.idx + 1} von ${state.questions.length}
+        ${state.retryRound > 0 ? `<span class="retry-badge">Wiederholung ${state.retryRound}</span>` : ""}
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="stats-row">
+        <span class="stat color-mint">✓ ${state.score.correct}</span>
+        <span class="stat color-coral">✗ ${state.score.wrong}</span>
+      </div>
+      <div class="quiz-card">
+        <div class="direction-tag ${dirClass}">${dirLabel}</div>
+        <div class="prompt">${esc(q.prompt)}</div>
+        <div class="input-row">
+          <input id="quiz-input" class="quiz-input ${inputClass}" type="text"
+            value="${esc(state.input)}" placeholder="${placeholder}"
+            ${state.feedback !== null ? "disabled" : ""}
+            autocomplete="off" autocapitalize="off">
+          <button class="btn ${btnClass}" onclick="handleSubmit()">${btnText}</button>
+        </div>
+        ${feedbackHtml}
+      </div>
+    `;
+
+    const inp = document.getElementById("quiz-input");
+    if (inp && state.feedback === null) {
+      inp.focus();
+      inp.addEventListener("input", e => { state.input = e.target.value; });
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") handleSubmit(); });
+    }
+    return;
+  }
+
+  if (state.screen === "results") {
+    const total = state.score.correct + state.score.wrong;
+    const pct = total > 0 ? Math.round((state.score.correct / total) * 100) : 0;
+    const emoji = pct >= 90 ? "🎉" : pct >= 70 ? "👍" : "💪";
+    let msg = "";
+    if (pct >= 90) msg = `<p class="color-mint" style="font-weight:600;margin-top:12px">Fantastisch! Du bist bereit! 🚀</p>`;
+    else if (pct >= 70) msg = `<p class="color-yellow" style="font-weight:600;margin-top:12px">Gut gemacht! Übe die Fehler nochmal.</p>`;
+    else msg = `<p class="color-coral" style="font-weight:600;margin-top:12px">Weiter üben — du schaffst das!</p>`;
+
+    const retryBtn = state.wrongWords.length > 0
+      ? `<button class="btn btn-coral" onclick="startRetry()">🔄 Fehler wiederholen (${state.wrongWords.length})</button>` : "";
+
+    const wrongHtml = state.wrongWords.length > 0 ? `
+      <div class="wrong-list">
+        <h3>Diese Wörter üben:</h3>
+        ${state.wrongWords.map(w => `
+          <div class="wrong-item">
+            <span style="color:#94a3b8">${esc(w.prompt)}</span>
+            <span style="margin:0 8px">→</span>
+            <strong>${esc(w.answer)}</strong>
+            ${w.direction === "de-en" ? " 🇬🇧" : " 🇩🇪"}
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    app.innerHTML = `
+      <button class="back-btn" onclick="setState({screen:'home'})">← Zurück zum Menü</button>
+      <div class="results-card">
+        <div style="font-size:40px;margin-bottom:8px">${emoji}</div>
+        <div class="big-score">${pct}%</div>
+        <p style="color:#94a3b8;font-size:14px;margin-top:4px">${state.score.correct} von ${total} richtig</p>
+        ${msg}
+        <div class="btn-row">
+          ${retryBtn}
+          <button class="btn btn-mint" onclick="startDay(${state.day})">↻ Nochmal starten</button>
+        </div>
+      </div>
+      ${wrongHtml}
+    `;
+    return;
+  }
+}
+
+// Initial render
+render();
+</script>
+</body>
+</html>
