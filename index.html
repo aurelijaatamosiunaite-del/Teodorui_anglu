@@ -194,7 +194,7 @@ function idVon(titel, woerter){
   return "l" + Math.abs(h).toString(36);
 }
 function listeAnlegen(titel, paare){
-  const woerter = paare.map(p => ({ en:p[0], de:p[1], stufe:0 }));
+  const woerter = paare.map(p => ({ en:p[0], de:p[1], stufe:0, nk: p[2] ? 1 : 0 }));
   return { id: idVon(titel, woerter), titel, woerter, erstellt: Date.now() };
 }
 function hinzufuegen(liste){
@@ -211,7 +211,7 @@ const fortschritt = l => {
 
 /* ============ Link-Kodierung ============ */
 function kodieren(liste){
-  const kurz = { t: liste.titel, w: liste.woerter.map(w => [w.en, w.de]) };
+  const kurz = { t: liste.titel, w: liste.woerter.map(w => w.nk ? [w.en, w.de, 1] : [w.en, w.de]) };
   const bytes = new TextEncoder().encode(JSON.stringify(kurz));
   let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
   return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
@@ -243,12 +243,27 @@ function paareAusText(text){
 
 /* ============ Antwort prüfen ============ */
 function normalisieren(s){
-  return s.toLowerCase().trim()
-    .replace(/^(to|the|a|an|der|die|das|ein|eine)\s+/,"")
-    .replace(/[.,!?;:'"´`()]/g,"")
+  return s.toLowerCase()
+    .replace(/[.,!?;:'"´`()\[\]-]/g," ")
     .replace(/[äàáâ]/g,"a").replace(/[öòóô]/g,"o").replace(/[üùúû]/g,"u")
     .replace(/[éèêë]/g,"e").replace(/ß/g,"ss")
-    .replace(/\s+/g," ");
+    .replace(/\s+/g," ").trim()
+    .replace(/^(to|the|a|an|der|die|das|ein|eine)\s+/,"");
+}
+function formen(s){                          // "(to) rain" zählt als "rain" und als "to rain"
+  return [ normalisieren(s.replace(/\([^)]*\)/g," ")), normalisieren(s) ]
+         .filter((v,i,a) => v && a.indexOf(v) === i);
+}
+function alternativen(s){                    // trennt bei , ; / – aber nicht in Klammern
+  const teile = []; let akt = "", tiefe = 0;
+  for (const c of s){
+    if (c === "(") tiefe++;
+    else if (c === ")") tiefe = Math.max(0, tiefe - 1);
+    if (tiefe === 0 && (c === "," || c === ";" || c === "/")){ teile.push(akt); akt = ""; }
+    else akt += c;
+  }
+  teile.push(akt);
+  return teile;
 }
 function abstand(a,b){                       // Levenshtein, für Tippfehler
   const m = Array.from({length:a.length+1}, (_,i) => [i, ...Array(b.length).fill(0)]);
@@ -259,17 +274,20 @@ function abstand(a,b){                       // Levenshtein, für Tippfehler
   return m[a.length][b.length];
 }
 function pruefeAntwort(eingabe, loesung){    // "ok" | "fast" | "nein"
-  const e = normalisieren(eingabe);
-  if (!e) return "nein";
-  const varianten = loesung.split(/[\/,]|\bor\b/).map(normalisieren).filter(Boolean);
-  if (varianten.includes(e)) return "ok";
-  if (varianten.some(v => v.length >= 5 && abstand(e, v) === 1)) return "fast";
+  const eingaben = formen(eingabe);
+  if (!eingaben.length) return "nein";
+  const varianten = [];
+  alternativen(loesung).forEach(t => formen(t).forEach(v => { if (!varianten.includes(v)) varianten.push(v); }));
+  if (eingaben.some(e => varianten.includes(e))) return "ok";
+  if (eingaben.some(e => varianten.some(v => v.length >= 5 && abstand(e,v) === 1))) return "fast";
   return "nein";
 }
 
 /* ============ Sitzung ============ */
 function sitzungStarten(liste, modus){
-  const pool = [...liste.woerter].sort((a,b) => (a.stufe||0) - (b.stufe||0) || Math.random() - .5);
+  const passend = liste.woerter.filter(w => !(modus === "schreiben" && w.nk));
+  if (!passend.length) return;
+  const pool = [...passend].sort((a,b) => (a.stufe||0) - (b.stufe||0) || Math.random() - .5);
   const auswahl = pool.slice(0, Math.min(10, pool.length)).sort(() => Math.random() - .5);
   S.sitzung = {
     modus, liste,
@@ -564,7 +582,7 @@ async function ausDatei(){
     const listen = Array.isArray(daten) ? daten : (daten.listen || []);
     let neu = false;
     listen.forEach(o => {
-      const paare = (o.woerter || o.w || []).map(w => Array.isArray(w) ? w : [w.en, w.de]);
+      const paare = (o.woerter || o.w || []).map(w => Array.isArray(w) ? w : [w.en, w.de, w.nurKarten]);
       if (!paare.length) return;
       const l = listeAnlegen(o.titel || o.t || "Liste", paare);
       if (!S.listen.some(x => x.id === l.id)){ S.listen.push(l); neu = true; }

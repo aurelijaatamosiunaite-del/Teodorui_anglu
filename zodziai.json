@@ -1,13 +1,195 @@
 {
   "listen": [
     {
-      "titel": "Beispiel – bitte ersetzen",
+      "titel": "Unit 1 – In the holidays",
       "woerter": [
-        { "en": "to arrive", "de": "ankommen" },
-        { "en": "luggage", "de": "das Gepäck" },
-        { "en": "delayed", "de": "verspätet" },
-        { "en": "boarding pass", "de": "die Bordkarte" },
-        { "en": "on time", "de": "pünktlich" }
+        {
+          "en": "stop",
+          "de": "Halt, Station, Haltestelle"
+        },
+        {
+          "en": "camping",
+          "de": "Camping, Zelten"
+        },
+        {
+          "en": "world",
+          "de": "Welt"
+        },
+        {
+          "en": "sunny",
+          "de": "sonnig"
+        },
+        {
+          "en": "mountain",
+          "de": "Berg"
+        },
+        {
+          "en": "beautiful",
+          "de": "schön"
+        },
+        {
+          "en": "alone",
+          "de": "allein"
+        },
+        {
+          "en": "Say hello to … for me",
+          "de": "Grüß … von mir",
+          "nurKarten": true
+        },
+        {
+          "en": "wave",
+          "de": "Welle"
+        },
+        {
+          "en": "weather",
+          "de": "Wetter"
+        },
+        {
+          "en": "cloud",
+          "de": "Wolke"
+        },
+        {
+          "en": "caravan",
+          "de": "Wohnwagen"
+        },
+        {
+          "en": "fun park",
+          "de": "Vergnügungspark"
+        },
+        {
+          "en": "windy",
+          "de": "windig"
+        },
+        {
+          "en": "project",
+          "de": "Projekt"
+        },
+        {
+          "en": "I can't wait to see …",
+          "de": "Ich kann es kaum erwarten, … zu sehen",
+          "nurKarten": true
+        },
+        {
+          "en": "rainforest",
+          "de": "Regenwald"
+        },
+        {
+          "en": "forest",
+          "de": "Wald"
+        },
+        {
+          "en": "rain",
+          "de": "Regen"
+        },
+        {
+          "en": "(to) rain",
+          "de": "regnen"
+        },
+        {
+          "en": "plant",
+          "de": "Pflanze"
+        },
+        {
+          "en": "message",
+          "de": "Nachricht"
+        },
+        {
+          "en": "phone call, call",
+          "de": "Anruf, Telefongespräch"
+        },
+        {
+          "en": "(to) phone sb.",
+          "de": "jn. anrufen"
+        },
+        {
+          "en": "(to) answer the phone",
+          "de": "ans Telefon gehen"
+        },
+        {
+          "en": "(to) be in",
+          "de": "zu Hause sein"
+        },
+        {
+          "en": "(to) be out",
+          "de": "nicht zu Hause sein"
+        },
+        {
+          "en": "(to) leave a message",
+          "de": "eine Nachricht hinterlassen"
+        },
+        {
+          "en": "holiday",
+          "de": "Urlaub"
+        },
+        {
+          "en": "What was it like?",
+          "de": "Wie war es?"
+        },
+        {
+          "en": "at first",
+          "de": "zuerst, anfangs, am Anfang"
+        },
+        {
+          "en": "race",
+          "de": "Rennen"
+        },
+        {
+          "en": "two days ago",
+          "de": "vor zwei Tagen"
+        },
+        {
+          "en": "country",
+          "de": "Land, Staat"
+        },
+        {
+          "en": "building",
+          "de": "Gebäude"
+        },
+        {
+          "en": "tomorrow",
+          "de": "morgen"
+        },
+        {
+          "en": "(to) bring (simple past: brought)",
+          "de": "bringen, mitbringen, herbringen",
+          "nurKarten": true
+        },
+        {
+          "en": "rainy",
+          "de": "regnerisch"
+        },
+        {
+          "en": "cloudy",
+          "de": "bewölkt"
+        },
+        {
+          "en": "foggy",
+          "de": "nebelig"
+        },
+        {
+          "en": "snowy",
+          "de": "schneebedeckt, verschneit, schneereich"
+        },
+        {
+          "en": "cold",
+          "de": "kalt"
+        },
+        {
+          "en": "hot",
+          "de": "heiß"
+        },
+        {
+          "en": "warm",
+          "de": "warm"
+        },
+        {
+          "en": "thunder and lightning, thundery",
+          "de": "Donner und Blitz"
+        },
+        {
+          "en": "stormy",
+          "de": "stürmisch"
+        }
       ]
     }
   ]
