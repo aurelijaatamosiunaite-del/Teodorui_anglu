@@ -1,0 +1,14 @@
+{
+  "listen": [
+    {
+      "titel": "Beispiel – bitte ersetzen",
+      "woerter": [
+        { "en": "to arrive", "de": "ankommen" },
+        { "en": "luggage", "de": "das Gepäck" },
+        { "en": "delayed", "de": "verspätet" },
+        { "en": "boarding pass", "de": "die Bordkarte" },
+        { "en": "on time", "de": "pünktlich" }
+      ]
+    }
+  ]
+}
