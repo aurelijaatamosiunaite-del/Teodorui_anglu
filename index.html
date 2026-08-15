@@ -157,6 +157,18 @@ input[type=text]{
   font-family:var(--display);font-weight:800;font-size:64px;letter-spacing:-.04em;
   line-height:1;margin:8px 0 4px;
 }
+.tabelle{border-top:1px solid var(--rand);margin-bottom:22px}
+.zeile{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--rand);
+  padding:12px 2px;color:inherit;align-items:start;line-height:1.35;
+}
+.zeile .de{color:var(--grau)}
+.zeile.sitzt{box-shadow:inset 3px 0 0 var(--linie);padding-left:11px}
+.zeile.sitzt .en{font-weight:600}
+.verdeckt{display:block;min-height:1.35em;border-bottom:1px dotted var(--grau);opacity:.45}
+.nur-karten{font-family:var(--mono);font-size:10px;color:var(--grau);letter-spacing:.1em}
+
 .leer{text-align:center;color:var(--grau);padding:44px 14px}
 .leer p{margin:0 0 18px}
 textarea{
@@ -179,7 +191,8 @@ const SPEICHER = "vokabellinie.v1";
 const APP = document.getElementById("app");
 
 /* ============ Daten ============ */
-let S = { listen: [], aktiv: null, richtung: "gemischt", ansicht: "bibliothek", sitzung: null };
+let S = { listen: [], aktiv: null, richtung: "gemischt", ansicht: "bibliothek", sitzung: null,
+          spalte: "beide", gezeigt: {} };
 
 function laden(){
   try { S.listen = JSON.parse(localStorage.getItem(SPEICHER)) || []; }
@@ -334,6 +347,7 @@ function zeichnen(){
   APP.innerHTML = "";
   if (S.ansicht === "bibliothek") bibliothek();
   else if (S.ansicht === "liste")  listenansicht();
+  else if (S.ansicht === "alle")   alleWoerter();
   else if (S.ansicht === "uebung") uebung();
   else if (S.ansicht === "ergebnis") ergebnis();
   else if (S.ansicht === "neu")    neueListe();
@@ -383,11 +397,41 @@ function listenansicht(){
     <button class="knopf" data-modus="karten">Karten</button>
     <button class="knopf sekundaer" data-modus="schreiben">Schreiben</button>
     <button class="knopf sekundaer" data-modus="test">Test</button>
+    <button class="knopf sekundaer" data-nav="alle" style="margin-top:14px">Alle Wörter ansehen</button>
 
     <div class="fuss">
       <button data-teilen="1">Link zu dieser Liste kopieren</button><br><br>
       <button data-loeschen="1">Liste löschen</button>
     </div>`;
+}
+
+function alleWoerter(){
+  const l = S.listen.find(x => x.id === S.aktiv);
+  if (!l){ S.ansicht = "bibliothek"; return zeichnen(); }
+  const sitzen = l.woerter.filter(w => (w.stufe||0) >= 3).length;
+  let h = kopf("Alle Wörter", "liste") + `
+    <div class="eyebrow" style="margin-bottom:8px">Spalte abdecken</div>
+    <div class="chips">
+      <button class="chip" data-spalte="beide" aria-pressed="${S.spalte==="beide"}">Beide zeigen</button>
+      <button class="chip" data-spalte="de" aria-pressed="${S.spalte==="de"}">Deutsch weg</button>
+      <button class="chip" data-spalte="en" aria-pressed="${S.spalte==="en"}">Englisch weg</button>
+    </div>
+    <div class="meta" style="margin-bottom:12px">
+      ${l.woerter.length} Wörter · ${sitzen} sitzen${S.spalte==="beide" ? "" : " · zum Aufdecken antippen"}
+    </div>
+    <div class="tabelle">`;
+  l.woerter.forEach((w,i) => {
+    const zeigen = S.spalte === "beide" || S.gezeigt[i];
+    const feld = (text, klasse, weg) => zeigen || !weg
+      ? `<span class="${klasse}">${escape_(text)}</span>`
+      : `<span class="${klasse} verdeckt"></span>`;
+    h += `<button class="zeile ${(w.stufe||0) >= 3 ? "sitzt" : ""}" data-zeile="${i}">
+      ${feld(w.en, "en", S.spalte === "en")}
+      ${feld(w.de, "de", S.spalte === "de")}
+    </button>`;
+  });
+  h += `</div><button class="knopf sekundaer" data-nav="liste">Zurück zum Üben</button>`;
+  APP.innerHTML = h;
 }
 
 function uebung(){
@@ -522,13 +566,18 @@ function escape_(s){
 
 /* ============ Klicks ============ */
 APP.addEventListener("click", e => {
-  const z = e.target.closest("[data-nav],[data-liste],[data-richtung],[data-modus],[data-aufdecken],[data-bewerten],[data-pruefen],[data-option],[data-teilen],[data-loeschen],[data-speichern]");
+  const z = e.target.closest("[data-nav],[data-liste],[data-richtung],[data-spalte],[data-zeile],[data-modus],[data-aufdecken],[data-bewerten],[data-pruefen],[data-option],[data-teilen],[data-loeschen],[data-speichern]");
   if (!z) return;
   const d = z.dataset;
 
-  if (d.nav){ S.ansicht = d.nav; if (S.sitzung && d.nav !== "uebung") S.sitzung.optionen = null; return zeichnen(); }
+  if (d.nav){ if (d.nav !== "alle") S.gezeigt = {}; S.ansicht = d.nav; if (S.sitzung && d.nav !== "uebung") S.sitzung.optionen = null; return zeichnen(); }
   if (d.liste){ S.aktiv = d.liste; S.ansicht = "liste"; return zeichnen(); }
   if (d.richtung){ S.richtung = d.richtung; return zeichnen(); }
+  if (d.spalte){ S.spalte = d.spalte; S.gezeigt = {}; return zeichnen(); }
+  if (d.zeile !== undefined){
+    if (S.spalte === "beide") return;
+    S.gezeigt[d.zeile] = !S.gezeigt[d.zeile]; return zeichnen();
+  }
 
   if (d.modus){
     const l = S.listen.find(x => x.id === S.aktiv);
