@@ -359,7 +359,7 @@ function bibliothek(){
   if (!S.listen.length){
     h += `<div class="leer"><p>Noch keine Liste da.<br>Öffne einen Link von Mama oder tippe eine Liste selbst ein.</p></div>`;
   } else {
-    S.listen.forEach(l => {
+    [...S.listen].sort((a,b) => (b.erstellt||0) - (a.erstellt||0)).forEach(l => {
       const p = fortschritt(l);
       const fertig = l.woerter.filter(w => (w.stufe||0) >= 3).length;
       h += `<button class="listenkarte" data-liste="${l.id}">
