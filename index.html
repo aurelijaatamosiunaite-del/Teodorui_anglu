@@ -280,7 +280,6 @@ function sitzungStarten(liste, modus){
   zeichnen();
 }
 function richtungFuer(){
-  if (S.sitzung.modus === "schreiben") return "de-en";
   if (S.richtung === "gemischt") return Math.random() < .5 ? "en-de" : "de-en";
   return S.richtung;
 }
@@ -415,19 +414,20 @@ function uebung(){
 
   if (s.modus === "schreiben"){
     h += `<div class="karte buehne">
-      <div class="hinweis">Wie heißt das auf Englisch?${eintrag.wiederholung ? " · nochmal" : ""}</div>
-      <div class="frage">${escape_(w.de)}</div>
+      <div class="hinweis">Wie heißt das auf ${enFrage ? "Deutsch" : "Englisch"}?${eintrag.wiederholung ? " · nochmal" : ""}</div>
+      <div class="frage">${escape_(frage)}</div>
     </div>`;
     if (s.geprueft === null){
       h += `<input type="text" id="eingabe" autocomplete="off" autocorrect="off" autocapitalize="none"
-                   spellcheck="false" placeholder="englisches Wort">
+                   spellcheck="false" lang="${enFrage ? "de" : "en"}"
+                   placeholder="${enFrage ? "deutsches" : "englisches"} Wort">
             <button class="knopf" data-pruefen="1">Prüfen</button>`;
     } else if (s.geprueft === "ok"){
       h += `<div class="rueckmeldung ok">Richtig</div>`;
     } else if (s.geprueft === "fast"){
-      h += `<div class="rueckmeldung ok">Fast – zählt<small>richtig: ${escape_(w.en)}</small></div>`;
+      h += `<div class="rueckmeldung ok">Fast – zählt<small>richtig: ${escape_(loesung)}</small></div>`;
     } else {
-      h += `<div class="rueckmeldung nein">Nicht ganz<small>${escape_(w.en)}</small></div>`;
+      h += `<div class="rueckmeldung nein">Nicht ganz<small>${escape_(loesung)}</small></div>`;
     }
   }
 
@@ -464,7 +464,8 @@ function pruefenSchreiben(){
   const feld = document.getElementById("eingabe");
   if (!feld) return;
   const s = S.sitzung, w = s.schlange[s.pos].wort;
-  s.geprueft = pruefeAntwort(feld.value, w.en);
+  const loesung = s.aktuelleRichtung === "en-de" ? w.de : w.en;
+  s.geprueft = pruefeAntwort(feld.value, loesung);
   zeichnen();
   bewerten(s.geprueft !== "nein");
 }
