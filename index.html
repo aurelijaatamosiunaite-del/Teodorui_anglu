@@ -43,7 +43,6 @@ body{
 button{font-family:inherit;font-size:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--signal);outline-offset:2px;border-radius:6px}
 
-/* ---------- Kopfzeile ---------- */
 .topbar{display:flex;align-items:center;gap:12px;min-height:44px;margin-bottom:18px}
 .zurueck{
   border:1px solid var(--rand);background:var(--karte);color:var(--tinte);
@@ -56,49 +55,27 @@ button{font-family:inherit;font-size:inherit;cursor:pointer}
   color:var(--grau);
 }
 
-/* ---------- Liniengrafik (Signature) ---------- */
 .linie-wrap{position:relative;margin:0 0 22px;height:26px}
-.linie-schiene{
-  position:absolute;left:5px;right:5px;top:11px;height:4px;border-radius:2px;
-  background:var(--rand);
-}
-.linie-fortschritt{
-  position:absolute;left:5px;top:11px;height:4px;border-radius:2px;
-  background:var(--linie);transition:width .35s cubic-bezier(.2,.7,.3,1);
-}
+.linie-schiene{position:absolute;left:5px;right:5px;top:11px;height:4px;border-radius:2px;background:var(--rand)}
+.linie-fortschritt{position:absolute;left:5px;top:11px;height:4px;border-radius:2px;background:var(--linie);transition:width .35s cubic-bezier(.2,.7,.3,1)}
 .linie-halte{position:relative;display:flex;justify-content:space-between;height:26px;align-items:center}
-.halt{
-  width:11px;height:11px;border-radius:50%;background:var(--rand);flex:0 0 auto;
-  border:2px solid var(--papier);transition:all .25s ease;
-}
+.halt{width:11px;height:11px;border-radius:50%;background:var(--rand);flex:0 1 auto;min-width:5px;border:2px solid var(--papier);transition:all .25s ease}
 .halt.erledigt{background:var(--linie)}
-.halt.jetzt{
-  width:20px;height:20px;background:var(--signal);
-  box-shadow:0 0 0 4px color-mix(in srgb, var(--signal) 28%, transparent);
-}
+.halt.jetzt{width:20px;height:20px;min-width:20px;background:var(--signal);box-shadow:0 0 0 4px color-mix(in srgb, var(--signal) 28%, transparent)}
 .halt.falsch{background:var(--falsch)}
 
-/* ---------- Karten ---------- */
-.karte{
-  background:var(--karte);border:1px solid var(--rand);border-radius:18px;
-  box-shadow:var(--schatten);
-}
+.karte{background:var(--karte);border:1px solid var(--rand);border-radius:18px;box-shadow:var(--schatten)}
 .listenkarte{
-  width:100%;text-align:left;padding:16px 18px 14px;margin-bottom:12px;
-  display:block;border:1px solid var(--rand);background:var(--karte);border-radius:18px;
-  box-shadow:var(--schatten);color:inherit;
-  transition:transform .12s ease;
+  width:100%;text-align:left;padding:16px 18px 14px;margin-bottom:12px;display:block;
+  border:1px solid var(--rand);background:var(--karte);border-radius:18px;
+  box-shadow:var(--schatten);color:inherit;transition:transform .12s ease;
 }
 .listenkarte:active{transform:scale(.985)}
-.listenkarte h3{
-  font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.02em;
-  margin:2px 0 10px;
-}
+.listenkarte h3{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:2px 0 10px}
 .meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grau)}
 .balken{height:4px;background:var(--rand);border-radius:2px;overflow:hidden;margin-top:10px}
 .balken i{display:block;height:100%;background:var(--linie);border-radius:2px}
 
-/* ---------- Buttons ---------- */
 .knopf{
   display:block;width:100%;padding:15px 18px;border-radius:14px;border:1px solid transparent;
   background:var(--linie);color:#fff;font-weight:600;font-size:17px;text-align:center;
@@ -108,74 +85,56 @@ button{font-family:inherit;font-size:inherit;cursor:pointer}
 .knopf.sekundaer{background:var(--karte);color:var(--tinte);border-color:var(--rand)}
 .knopf.gut{background:var(--richtig)}
 .knopf.schlecht{background:var(--falsch)}
-.knopf.klein{padding:11px 14px;font-size:15px;margin-bottom:0}
 .reihe{display:flex;gap:10px;margin-bottom:10px}
 .reihe > *{flex:1;margin-bottom:0}
 
 .chips{display:flex;gap:8px;margin:6px 0 22px;flex-wrap:wrap}
-.chip{
-  padding:8px 13px;border-radius:999px;border:1px solid var(--rand);
-  background:var(--karte);color:var(--grau);font-size:14px;font-weight:500;
-}
+.chip{padding:8px 13px;border-radius:999px;border:1px solid var(--rand);background:var(--karte);color:var(--grau);font-size:14px;font-weight:500}
 .chip[aria-pressed="true"]{background:var(--tinte);color:var(--papier);border-color:var(--tinte)}
 
-/* ---------- Übung ---------- */
-.buehne{
-  min-height:210px;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;padding:30px 22px;margin-bottom:18px;
-}
-.frage{
-  font-family:var(--display);font-weight:800;font-size:clamp(30px,9vw,42px);
-  letter-spacing:-.03em;line-height:1.1;
-}
-.antwort{
-  font-family:var(--display);font-weight:600;font-size:clamp(21px,6vw,27px);
-  color:var(--linie);letter-spacing:-.02em;margin-top:16px;
-  padding-top:16px;border-top:1px dashed var(--rand);width:100%;
-}
+.buehne{min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:28px 22px;margin-bottom:18px}
+.frage{font-family:var(--display);font-weight:800;font-size:clamp(28px,8.5vw,40px);letter-spacing:-.03em;line-height:1.12}
+.gram{font-family:var(--mono);font-size:13px;color:var(--grau);margin-top:8px;letter-spacing:.06em}
+.antwort{font-family:var(--display);font-weight:600;font-size:clamp(20px,5.5vw,26px);color:var(--linie);letter-spacing:-.02em;margin-top:16px;padding-top:16px;border-top:1px dashed var(--rand);width:100%}
+.antwort div + div{margin-top:4px}
 .hinweis{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grau);margin-bottom:14px}
 input[type=text]{
-  width:100%;padding:15px 16px;font-size:19px;font-family:var(--body);
+  width:100%;padding:14px 16px;font-size:19px;font-family:var(--body);
   border:1px solid var(--rand);border-radius:14px;background:var(--karte);color:var(--tinte);
-  margin-bottom:10px;
+  margin-bottom:9px;
 }
-.rueckmeldung{text-align:center;font-weight:600;margin:0 0 12px;min-height:26px}
+.pruefliste{margin-bottom:14px}
+.pruefzeile{
+  display:flex;gap:11px;align-items:baseline;padding:11px 15px;border-radius:13px;
+  border:1px solid var(--rand);background:var(--karte);margin-bottom:8px;
+}
+.pruefzeile .zeichen{font-family:var(--mono);font-weight:700;flex:0 0 auto}
+.pruefzeile.ok{border-color:var(--richtig)}
+.pruefzeile.ok .zeichen{color:var(--richtig)}
+.pruefzeile.nein{border-color:var(--falsch)}
+.pruefzeile.nein .zeichen{color:var(--falsch)}
+.pruefzeile small{display:block;color:var(--grau);font-family:var(--mono);font-size:12px;margin-top:2px}
+.rueckmeldung{text-align:center;font-weight:600;margin:0 0 12px;min-height:24px}
 .rueckmeldung.ok{color:var(--richtig)}
 .rueckmeldung.nein{color:var(--falsch)}
-.rueckmeldung small{display:block;font-weight:400;color:var(--grau);font-family:var(--mono);font-size:12px;margin-top:3px}
 
-.optionen{display:grid;gap:10px;margin-bottom:14px}
-.option{
-  padding:15px 18px;border-radius:14px;border:1px solid var(--rand);background:var(--karte);
-  color:var(--tinte);text-align:left;font-size:17px;
-}
-.option.ok{border-color:var(--richtig);background:color-mix(in srgb,var(--richtig) 12%,var(--karte));font-weight:600}
-.option.nein{border-color:var(--falsch);background:color-mix(in srgb,var(--falsch) 12%,var(--karte))}
+.ergebnis-zahl{font-family:var(--display);font-weight:800;font-size:64px;letter-spacing:-.04em;line-height:1;margin:8px 0 4px}
 
-/* ---------- Ergebnis ---------- */
-.ergebnis-zahl{
-  font-family:var(--display);font-weight:800;font-size:64px;letter-spacing:-.04em;
-  line-height:1;margin:8px 0 4px;
-}
 .tabelle{border-top:1px solid var(--rand);margin-bottom:22px}
 .zeile{
   display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;text-align:left;
   background:none;border:none;border-bottom:1px solid var(--rand);
   padding:12px 2px;color:inherit;align-items:start;line-height:1.35;
 }
-.zeile .de{color:var(--grau)}
+.zeile .b{color:var(--grau)}
+.zeile .gram-klein{font-family:var(--mono);font-size:11px;color:var(--grau);margin-left:5px}
 .zeile.sitzt{box-shadow:inset 3px 0 0 var(--linie);padding-left:11px}
-.zeile.sitzt .en{font-weight:600}
+.zeile.sitzt .a{font-weight:600}
 .verdeckt{display:block;min-height:1.35em;border-bottom:1px dotted var(--grau);opacity:.45}
-.nur-karten{font-family:var(--mono);font-size:10px;color:var(--grau);letter-spacing:.1em}
 
 .leer{text-align:center;color:var(--grau);padding:44px 14px}
 .leer p{margin:0 0 18px}
-textarea{
-  width:100%;min-height:190px;padding:14px;border:1px solid var(--rand);border-radius:14px;
-  font-family:var(--mono);font-size:14px;background:var(--karte);color:var(--tinte);
-  margin-bottom:10px;line-height:1.6;
-}
+textarea{width:100%;min-height:190px;padding:14px;border:1px solid var(--rand);border-radius:14px;font-family:var(--mono);font-size:14px;background:var(--karte);color:var(--tinte);margin-bottom:10px;line-height:1.6}
 label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 .fuss{margin-top:26px;text-align:center}
 .fuss button{background:none;border:none;color:var(--grau);font-size:14px;text-decoration:underline}
@@ -187,60 +146,85 @@ label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 
 <script>
 "use strict";
-const SPEICHER = "vokabellinie.v1";
+
+/* === KONFIG START === */
+const KONFIG = {
+  marke:      "Vokabellinie",
+  spracheA:   "Englisch",
+  spracheB:   "Deutsch",
+  kuerzelA:   "EN",
+  kuerzelB:   "DE",
+  richtungen: ["ab", "ba", "gemischt"],
+  modi:       ["karten", "schreiben"],
+  mehrfach:   false,
+  speicher:   "vokabellinie.v1"
+};
+/* === KONFIG ENDE === */
+
 const APP = document.getElementById("app");
+let S = { listen: [], aktiv: null, richtung: KONFIG.richtungen[0], ansicht: "bibliothek",
+          sitzung: null, spalte: "beide", gezeigt: {} };
 
 /* ============ Daten ============ */
-let S = { listen: [], aktiv: null, richtung: "gemischt", ansicht: "bibliothek", sitzung: null,
-          spalte: "beide", gezeigt: {} };
-
 function laden(){
-  try { S.listen = JSON.parse(localStorage.getItem(SPEICHER)) || []; }
-  catch(e){ S.listen = []; }
+  let roh = [];
+  try { roh = JSON.parse(localStorage.getItem(KONFIG.speicher)) || []; } catch(e){ roh = []; }
+  roh.forEach(l => (l.woerter || []).forEach(w => {          // alte Listen mitnehmen
+    if (w.a === undefined){ w.a = w.en; w.b = [w.de]; delete w.en; delete w.de; }
+    if (!Array.isArray(w.b)) w.b = [w.b];
+  }));
+  S.listen = roh;
 }
 function sichern(){
-  try { localStorage.setItem(SPEICHER, JSON.stringify(S.listen)); } catch(e){}
+  try { localStorage.setItem(KONFIG.speicher, JSON.stringify(S.listen)); } catch(e){}
 }
 function idVon(titel, woerter){
-  let h = 0; const s = titel + "|" + woerter.map(w=>w.en).join(",");
+  let h = 0; const s = titel + "|" + woerter.map(w => w.a).join(",");
   for (let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; }
   return "l" + Math.abs(h).toString(36);
 }
-function listeAnlegen(titel, paare){
-  const woerter = paare.map(p => ({ en:p[0], de:p[1], stufe:0, nk: p[2] ? 1 : 0 }));
+function listeAnlegen(titel, eintraege){
+  const woerter = eintraege.map(e => ({
+    a: e.a, b: Array.isArray(e.b) ? e.b : [e.b],
+    h: e.h || "", nk: e.nk ? 1 : 0, stufe: 0
+  }));
   return { id: idVon(titel, woerter), titel, woerter, erstellt: Date.now() };
 }
 function hinzufuegen(liste){
   const vorhanden = S.listen.find(l => l.id === liste.id);
-  if (vorhanden) return vorhanden;           // schon da – Fortschritt bleibt
+  if (vorhanden) return vorhanden;
   S.listen.unshift(liste); sichern(); return liste;
 }
 const fortschritt = l => {
   if (!l.woerter.length) return 0;
-  const max = l.woerter.length * 3;
   const ist = l.woerter.reduce((a,w) => a + Math.min(w.stufe||0, 3), 0);
-  return Math.round(ist / max * 100);
+  return Math.round(ist / (l.woerter.length * 3) * 100);
 };
 
-/* ============ Link-Kodierung ============ */
+/* ============ Link ============ */
 function kodieren(liste){
-  const kurz = { t: liste.titel, w: liste.woerter.map(w => w.nk ? [w.en, w.de, 1] : [w.en, w.de]) };
+  const kurz = { t: liste.titel, w: liste.woerter.map(w => {
+    const e = [w.a, w.b.length === 1 ? w.b[0] : w.b];
+    if (w.nk || w.h) e.push(w.nk ? 1 : 0);
+    if (w.h) e.push(w.h);
+    return e;
+  })};
   const bytes = new TextEncoder().encode(JSON.stringify(kurz));
   let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
   return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
 function dekodieren(code){
   const s = code.replace(/-/g,"+").replace(/_/g,"/");
-  const bin = atob(s);
-  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  const bytes = Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const o = JSON.parse(new TextDecoder().decode(bytes));
-  return listeAnlegen(o.t || "Neue Liste", o.w || []);
+  return listeAnlegen(o.t || "Neue Liste",
+    (o.w || []).map(e => ({ a:e[0], b:e[1], nk:e[2], h:e[3] })));
 }
 const linkVon = liste => location.origin + location.pathname + "#l=" + kodieren(liste);
 
 /* ============ Text einlesen ============ */
-function paareAusText(text){
-  const paare = [];
+function eintraegeAusText(text){
+  const raus = [];
   text.split(/\r?\n/).forEach(zeile => {
     const z = zeile.trim();
     if (!z) return;
@@ -249,27 +233,30 @@ function paareAusText(text){
       const t = z.split(trenner);
       if (t.length >= 2 && t[0].trim() && t.slice(1).join(" ").trim()){ teile = t; break; }
     }
-    if (teile) paare.push([teile[0].trim(), teile.slice(1).join(" ").trim()]);
+    if (!teile) return;
+    const a = teile[0].trim(), rest = teile.slice(1).join(" ").trim();
+    raus.push({ a, b: KONFIG.mehrfach ? rest.split(/\s*,\s*/).filter(Boolean) : [rest] });
   });
-  return paare;
+  return raus;
 }
 
 /* ============ Antwort prüfen ============ */
 function normalisieren(s){
-  return s.toLowerCase()
+  return String(s).toLowerCase()
     .replace(/[.,!?;:'"´`()\[\]-]/g," ")
-    .replace(/[äàáâ]/g,"a").replace(/[öòóô]/g,"o").replace(/[üùúû]/g,"u")
-    .replace(/[éèêë]/g,"e").replace(/ß/g,"ss")
+    .replace(/[äàáâāă]/g,"a").replace(/[öòóôō]/g,"o").replace(/[üùúûū]/g,"u")
+    .replace(/[éèêëē]/g,"e").replace(/[ìíîī]/g,"i").replace(/ß/g,"ss")
     .replace(/\s+/g," ").trim()
     .replace(/^(to|the|a|an|der|die|das|ein|eine)\s+/,"");
 }
-function formen(s){                          // "(to) rain" zählt als "rain" und als "to rain"
-  return [ normalisieren(s.replace(/\([^)]*\)/g," ")), normalisieren(s) ]
-         .filter((v,i,a) => v && a.indexOf(v) === i);
+function formen(s){
+  return [ normalisieren(String(s).replace(/\([^)]*\)/g," ")), normalisieren(s) ]
+         .filter((v,i,arr) => v && arr.indexOf(v) === i);
 }
-function alternativen(s){                    // trennt bei , ; / – aber nicht in Klammern
+function alternativen(s){
+  if (KONFIG.mehrfach) return [s];              // jede Antwort zählt genau so, wie sie dasteht
   const teile = []; let akt = "", tiefe = 0;
-  for (const c of s){
+  for (const c of String(s)){
     if (c === "(") tiefe++;
     else if (c === ")") tiefe = Math.max(0, tiefe - 1);
     if (tiefe === 0 && (c === "," || c === ";" || c === "/")){ teile.push(akt); akt = ""; }
@@ -278,7 +265,7 @@ function alternativen(s){                    // trennt bei , ; / – aber nicht 
   teile.push(akt);
   return teile;
 }
-function abstand(a,b){                       // Levenshtein, für Tippfehler
+function abstand(a,b){
   const m = Array.from({length:a.length+1}, (_,i) => [i, ...Array(b.length).fill(0)]);
   for (let j=0;j<=b.length;j++) m[0][j] = j;
   for (let i=1;i<=a.length;i++)
@@ -286,7 +273,7 @@ function abstand(a,b){                       // Levenshtein, für Tippfehler
       m[i][j] = Math.min(m[i-1][j]+1, m[i][j-1]+1, m[i-1][j-1] + (a[i-1]===b[j-1]?0:1));
   return m[a.length][b.length];
 }
-function pruefeAntwort(eingabe, loesung){    // "ok" | "fast" | "nein"
+function pruefeAntwort(eingabe, loesung){          // "ok" | "fast" | "nein"
   const eingaben = formen(eingabe);
   if (!eingaben.length) return "nein";
   const varianten = [];
@@ -295,24 +282,39 @@ function pruefeAntwort(eingabe, loesung){    // "ok" | "fast" | "nein"
   if (eingaben.some(e => varianten.some(v => v.length >= 5 && abstand(e,v) === 1))) return "fast";
   return "nein";
 }
+/* Mehrere Felder gegen mehrere Lösungen, Reihenfolge egal. */
+function pruefeAlle(eingaben, loesungen){
+  const offen = loesungen.map((l,i) => i);
+  const treffer = eingaben.map(() => null);
+  ["ok","fast"].forEach(stufe => {
+    eingaben.forEach((eing,i) => {
+      if (treffer[i]) return;
+      const j = offen.find(k => pruefeAntwort(eing, loesungen[k]) === stufe);
+      if (j !== undefined){ treffer[i] = { stufe, loesung: j }; offen.splice(offen.indexOf(j),1); }
+    });
+  });
+  return { treffer, fehlend: offen, alleRichtig: offen.length === 0 };
+}
 
 /* ============ Sitzung ============ */
 function sitzungStarten(liste, modus){
   const passend = liste.woerter.filter(w => !(modus === "schreiben" && w.nk));
   if (!passend.length) return;
-  const pool = [...passend].sort((a,b) => (a.stufe||0) - (b.stufe||0) || Math.random() - .5);
-  const auswahl = pool.slice(0, Math.min(10, pool.length)).sort(() => Math.random() - .5);
-  S.sitzung = {
-    modus, liste,
-    schlange: auswahl.map(w => ({ wort:w, wiederholung:false })),
-    pos: 0, richtig: 0, falsch: 0, verlauf: [], aufgedeckt: false, geprueft: null
-  };
+  const auswahl = [...passend].sort(() => Math.random() - .5);   // ALLE Wörter der Liste
+  S.sitzung = { modus, liste, schlange: auswahl.map(w => ({ wort:w, wiederholung:false })),
+                pos:0, richtig:0, falsch:0, verlauf:[], aufgedeckt:false, geprueft:null, warte:false };
   S.ansicht = "uebung";
   zeichnen();
 }
 function richtungFuer(){
-  if (S.richtung === "gemischt") return Math.random() < .5 ? "en-de" : "de-en";
+  if (S.richtung === "gemischt") return Math.random() < .5 ? "ab" : "ba";
   return S.richtung;
+}
+function weiter(){
+  const s = S.sitzung;
+  s.pos++; s.aufgedeckt = false; s.geprueft = null; s.warte = false; s.aktuelleRichtung = null;
+  S.ansicht = s.pos >= s.schlange.length ? "ergebnis" : "uebung";
+  zeichnen();
 }
 function bewerten(korrekt){
   const s = S.sitzung, eintrag = s.schlange[s.pos], w = eintrag.wort;
@@ -326,23 +328,20 @@ function bewerten(korrekt){
   }
   s.verlauf.push(korrekt);
   sichern();
-  setTimeout(() => {
-    s.pos++; s.aufgedeckt = false; s.geprueft = null; s.aktuelleRichtung = null;
-    S.ansicht = s.pos >= s.schlange.length ? "ergebnis" : "uebung";
-    zeichnen();
-  }, korrekt ? 480 : 1250);
+  if (!korrekt && s.modus === "schreiben"){ s.warte = true; return zeichnen(); }
+  setTimeout(weiter, korrekt ? 620 : 1200);
 }
 
 /* ============ Ansichten ============ */
-function el(html){ const d = document.createElement("div"); d.innerHTML = html.trim(); return d.firstElementChild; }
-
 function kopf(titel, zurueckZu){
   return `<div class="topbar">
     ${zurueckZu ? `<button class="zurueck" data-nav="${zurueckZu}" aria-label="Zurück">&#8592;</button>` : ""}
-    <div><div class="eyebrow">Vokabellinie</div><div class="marke">${titel}</div></div>
+    <div><div class="eyebrow">${escape_(KONFIG.marke)}</div><div class="marke">${titel}</div></div>
   </div>`;
 }
-
+function escape_(s){
+  return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+}
 function zeichnen(){
   APP.innerHTML = "";
   if (S.ansicht === "bibliothek") bibliothek();
@@ -377,8 +376,20 @@ function listenansicht(){
   const l = S.listen.find(x => x.id === S.aktiv);
   if (!l){ S.ansicht = "bibliothek"; return zeichnen(); }
   const p = fortschritt(l);
-  const halte = l.woerter.map(w =>
-    `<span class="halt ${(w.stufe||0) >= 3 ? "erledigt" : ""}"></span>`).join("");
+  const halte = l.woerter.map(w => `<span class="halt ${(w.stufe||0) >= 3 ? "erledigt" : ""}"></span>`).join("");
+
+  const namen = { ab: `${KONFIG.kuerzelA} → ${KONFIG.kuerzelB}`,
+                  ba: `${KONFIG.kuerzelB} → ${KONFIG.kuerzelA}`, gemischt: "Gemischt" };
+  const richtungsWahl = KONFIG.richtungen.length > 1 ? `
+    <div class="eyebrow" style="margin-bottom:8px">Richtung</div>
+    <div class="chips">${KONFIG.richtungen.map(r =>
+      `<button class="chip" data-richtung="${r}" aria-pressed="${S.richtung===r}">${namen[r]}</button>`).join("")}
+    </div>` : "";
+
+  const modusNamen = { karten:"Karten", schreiben:"Schreiben", test:"Test" };
+  const modusKnoepfe = KONFIG.modi.map((m,i) =>
+    `<button class="knopf ${i ? "sekundaer" : ""}" data-modus="${m}">${modusNamen[m]}</button>`).join("");
+
   APP.innerHTML = kopf(l.titel, "bibliothek") + `
     <div class="linie-wrap">
       <div class="linie-schiene"></div>
@@ -386,19 +397,9 @@ function listenansicht(){
       <div class="linie-halte">${halte}</div>
     </div>
     <div class="meta" style="margin-bottom:22px">${p}% gelernt · ${l.woerter.length} Wörter</div>
-
-    <div class="eyebrow" style="margin-bottom:8px">Richtung</div>
-    <div class="chips">
-      <button class="chip" data-richtung="en-de" aria-pressed="${S.richtung==="en-de"}">EN → DE</button>
-      <button class="chip" data-richtung="de-en" aria-pressed="${S.richtung==="de-en"}">DE → EN</button>
-      <button class="chip" data-richtung="gemischt" aria-pressed="${S.richtung==="gemischt"}">Gemischt</button>
-    </div>
-
-    <button class="knopf" data-modus="karten">Karten</button>
-    <button class="knopf sekundaer" data-modus="schreiben">Schreiben</button>
-    <button class="knopf sekundaer" data-modus="test">Test</button>
+    ${richtungsWahl}
+    ${modusKnoepfe}
     <button class="knopf sekundaer" data-nav="alle" style="margin-top:14px">Alle Wörter ansehen</button>
-
     <div class="fuss">
       <button data-teilen="1">Link zu dieser Liste kopieren</button><br><br>
       <button data-loeschen="1">Liste löschen</button>
@@ -413,8 +414,8 @@ function alleWoerter(){
     <div class="eyebrow" style="margin-bottom:8px">Spalte abdecken</div>
     <div class="chips">
       <button class="chip" data-spalte="beide" aria-pressed="${S.spalte==="beide"}">Beide zeigen</button>
-      <button class="chip" data-spalte="de" aria-pressed="${S.spalte==="de"}">Deutsch weg</button>
-      <button class="chip" data-spalte="en" aria-pressed="${S.spalte==="en"}">Englisch weg</button>
+      <button class="chip" data-spalte="b" aria-pressed="${S.spalte==="b"}">${escape_(KONFIG.spracheB)} weg</button>
+      <button class="chip" data-spalte="a" aria-pressed="${S.spalte==="a"}">${escape_(KONFIG.spracheA)} weg</button>
     </div>
     <div class="meta" style="margin-bottom:12px">
       ${l.woerter.length} Wörter · ${sitzen} sitzen${S.spalte==="beide" ? "" : " · zum Aufdecken antippen"}
@@ -422,12 +423,14 @@ function alleWoerter(){
     <div class="tabelle">`;
   l.woerter.forEach((w,i) => {
     const zeigen = S.spalte === "beide" || S.gezeigt[i];
-    const feld = (text, klasse, weg) => zeigen || !weg
-      ? `<span class="${klasse}">${escape_(text)}</span>`
+    const seiteA = escape_(w.a) + (w.h ? `<span class="gram-klein">${escape_(w.h)}</span>` : "");
+    const seiteB = escape_(w.b.join(", "));
+    const feld = (inhalt, klasse, weg) => zeigen || !weg
+      ? `<span class="${klasse}">${inhalt}</span>`
       : `<span class="${klasse} verdeckt"></span>`;
     h += `<button class="zeile ${(w.stufe||0) >= 3 ? "sitzt" : ""}" data-zeile="${i}">
-      ${feld(w.en, "en", S.spalte === "en")}
-      ${feld(w.de, "de", S.spalte === "de")}
+      ${feld(seiteA, "a", S.spalte === "a")}
+      ${feld(seiteB, "b", S.spalte === "b")}
     </button>`;
   });
   h += `</div><button class="knopf sekundaer" data-nav="liste">Zurück zum Üben</button>`;
@@ -437,9 +440,10 @@ function alleWoerter(){
 function uebung(){
   const s = S.sitzung, eintrag = s.schlange[s.pos], w = eintrag.wort;
   if (!s.aktuelleRichtung) s.aktuelleRichtung = richtungFuer();
-  const enFrage = s.aktuelleRichtung === "en-de";
-  const frage = enFrage ? w.en : w.de;
-  const loesung = enFrage ? w.de : w.en;
+  const vonA = s.aktuelleRichtung === "ab";
+  const frage = vonA ? w.a : w.b.join(", ");
+  const loesungen = vonA ? w.b : [w.a];
+  const gram = vonA && w.h ? `<div class="gram">${escape_(w.h)}</div>` : "";
 
   const halte = s.schlange.map((e,i) => {
     let k = "halt";
@@ -451,7 +455,7 @@ function uebung(){
 
   let h = `<div class="topbar">
       <button class="zurueck" data-nav="liste" aria-label="Übung beenden">&#10005;</button>
-      <div><div class="eyebrow">${{karten:"Karten",schreiben:"Schreiben",test:"Test"}[s.modus]}</div>
+      <div><div class="eyebrow">${s.modus === "karten" ? "Karten" : "Schreiben"}</div>
       <div class="marke">${s.pos+1} / ${s.schlange.length}</div></div>
     </div>
     <div class="linie-wrap">
@@ -462,9 +466,9 @@ function uebung(){
 
   if (s.modus === "karten"){
     h += `<div class="karte buehne">
-      <div class="hinweis">${enFrage ? "Englisch" : "Deutsch"}${eintrag.wiederholung ? " · nochmal" : ""}</div>
-      <div class="frage">${escape_(frage)}</div>
-      ${s.aufgedeckt ? `<div class="antwort">${escape_(loesung)}</div>` : ""}
+      <div class="hinweis">${escape_(vonA ? KONFIG.spracheA : KONFIG.spracheB)}${eintrag.wiederholung ? " · nochmal" : ""}</div>
+      <div class="frage">${escape_(frage)}</div>${gram}
+      ${s.aufgedeckt ? `<div class="antwort">${loesungen.map(x => `<div>${escape_(x)}</div>`).join("")}</div>` : ""}
     </div>`;
     h += s.aufgedeckt
       ? `<div class="reihe">
@@ -475,61 +479,62 @@ function uebung(){
   }
 
   if (s.modus === "schreiben"){
+    const ziel = vonA ? KONFIG.spracheB : KONFIG.spracheA;
     h += `<div class="karte buehne">
-      <div class="hinweis">Wie heißt das auf ${enFrage ? "Deutsch" : "Englisch"}?${eintrag.wiederholung ? " · nochmal" : ""}</div>
-      <div class="frage">${escape_(frage)}</div>
+      <div class="hinweis">Wie heißt das auf ${escape_(ziel)}?${eintrag.wiederholung ? " · nochmal" : ""}</div>
+      <div class="frage">${escape_(frage)}</div>${gram}
+      ${loesungen.length > 1 ? `<div class="gram">${loesungen.length} Antworten</div>` : ""}
     </div>`;
-    if (s.geprueft === null){
-      h += `<input type="text" id="eingabe" autocomplete="off" autocorrect="off" autocapitalize="none"
-                   spellcheck="false" lang="${enFrage ? "de" : "en"}"
-                   placeholder="${enFrage ? "deutsches" : "englisches"} Wort">
-            <button class="knopf" data-pruefen="1">Prüfen</button>`;
-    } else if (s.geprueft === "ok"){
-      h += `<div class="rueckmeldung ok">Richtig</div>`;
-    } else if (s.geprueft === "fast"){
-      h += `<div class="rueckmeldung ok">Fast – zählt<small>richtig: ${escape_(loesung)}</small></div>`;
+    if (!s.geprueft){
+      h += loesungen.map((_,i) =>
+        `<input type="text" id="feld${i}" data-feld="${i}" autocomplete="off" autocorrect="off"
+                autocapitalize="none" spellcheck="false"
+                placeholder="${loesungen.length > 1 ? (i+1) + ". Antwort" : escape_(ziel)}">`).join("");
+      h += `<button class="knopf" data-pruefen="1">Prüfen</button>`;
     } else {
-      h += `<div class="rueckmeldung nein">Nicht ganz<small>${escape_(loesung)}</small></div>`;
+      const r = s.geprueft;
+      h += `<div class="pruefliste">`;
+      r.treffer.forEach((t,i) => {
+        const eing = s.eingaben[i] || "";
+        if (t) h += `<div class="pruefzeile ok"><span class="zeichen">&#10003;</span>
+                       <span>${escape_(loesungen[t.loesung])}${t.stufe === "fast" ? `<small>getippt: ${escape_(eing)}</small>` : ""}</span></div>`;
+        else   h += `<div class="pruefzeile nein"><span class="zeichen">&#10007;</span>
+                       <span>${escape_(eing) || "<em>leer</em>"}</span></div>`;
+      });
+      r.fehlend.forEach(j => {
+        h += `<div class="pruefzeile nein"><span class="zeichen">&#8594;</span>
+                <span>${escape_(loesungen[j])}<small>gefehlt</small></span></div>`;
+      });
+      h += `</div>`;
+      h += r.alleRichtig
+        ? `<div class="rueckmeldung ok">Richtig</div>`
+        : `<button class="knopf" data-weiter="1">Weiter</button>`;
     }
   }
 
-  if (s.modus === "test"){
-    if (!s.optionen){
-      const falsche = s.liste.woerter.filter(x => x !== w)
-        .sort(() => Math.random() - .5).slice(0,3)
-        .map(x => enFrage ? x.de : x.en);
-      s.optionen = [loesung, ...falsche].sort(() => Math.random() - .5);
-    }
-    h += `<div class="karte buehne">
-      <div class="hinweis">${enFrage ? "Englisch" : "Deutsch"}${eintrag.wiederholung ? " · nochmal" : ""}</div>
-      <div class="frage">${escape_(frage)}</div>
-    </div><div class="optionen">`;
-    s.optionen.forEach((o,i) => {
-      let k = "option";
-      if (s.geprueft !== null){
-        if (o === loesung) k += " ok";
-        else if (i === s.gewaehlt) k += " nein";
-      }
-      h += `<button class="${k}" data-option="${i}">${escape_(o)}</button>`;
-    });
-    h += `</div>`;
-  }
   APP.innerHTML = h;
-  const feld = document.getElementById("eingabe");
-  if (feld){
-    feld.focus();
-    feld.addEventListener("keydown", e => { if (e.key === "Enter") pruefenSchreiben(); });
+  const erstes = document.getElementById("feld0");
+  if (erstes){
+    erstes.focus();
+    loesungen.forEach((_,i) => {
+      const f = document.getElementById("feld" + i);
+      f.addEventListener("keydown", e => {
+        if (e.key !== "Enter") return;
+        const naechstes = document.getElementById("feld" + (i+1));
+        if (naechstes) naechstes.focus(); else pruefenSchreiben();
+      });
+    });
   }
 }
 
 function pruefenSchreiben(){
-  const feld = document.getElementById("eingabe");
-  if (!feld) return;
   const s = S.sitzung, w = s.schlange[s.pos].wort;
-  const loesung = s.aktuelleRichtung === "en-de" ? w.de : w.en;
-  s.geprueft = pruefeAntwort(feld.value, loesung);
+  const vonA = s.aktuelleRichtung === "ab";
+  const loesungen = vonA ? w.b : [w.a];
+  s.eingaben = loesungen.map((_,i) => (document.getElementById("feld" + i) || {}).value || "");
+  s.geprueft = pruefeAlle(s.eingaben, loesungen);
   zeichnen();
-  bewerten(s.geprueft !== "nein");
+  bewerten(s.geprueft.alleRichtig);
 }
 
 function ergebnis(){
@@ -546,31 +551,30 @@ function ergebnis(){
       </div>
     </div>
     <button class="knopf" data-modus="${s.modus}">Noch eine Runde</button>
-    <button class="knopf sekundaer" data-nav="liste">Anderer Modus</button>`;
+    <button class="knopf sekundaer" data-nav="liste">Zurück zur Liste</button>`;
 }
 
 function neueListe(){
   APP.innerHTML = kopf("Neue Liste", "bibliothek") + `
     <label for="titel">Titel</label>
-    <input type="text" id="titel" placeholder="Unit 3 – At the airport">
+    <input type="text" id="titel" placeholder="Lektion 2">
     <label for="paste">Wörter – ein Paar pro Zeile</label>
-    <textarea id="paste" spellcheck="false" placeholder="to arrive = ankommen&#10;luggage = das Gepäck&#10;delayed = verspätet"></textarea>
-    <div class="meta" style="margin-bottom:16px">Trennzeichen: = oder Tab oder –</div>
+    <textarea id="paste" spellcheck="false" placeholder="${KONFIG.mehrfach
+      ? "forum = Marktplatz, Forum, Öffentlichkeit&#10;curia = Kurie, Rathaus"
+      : "to arrive = ankommen&#10;luggage = das Gepäck"}"></textarea>
+    <div class="meta" style="margin-bottom:16px">Trennzeichen: = oder Tab oder –${
+      KONFIG.mehrfach ? " · mehrere Übersetzungen mit Komma" : ""}</div>
     <button class="knopf" data-speichern="1">Liste speichern</button>
     <button class="knopf sekundaer" data-nav="bibliothek">Abbrechen</button>`;
 }
 
-function escape_(s){
-  return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-}
-
 /* ============ Klicks ============ */
 APP.addEventListener("click", e => {
-  const z = e.target.closest("[data-nav],[data-liste],[data-richtung],[data-spalte],[data-zeile],[data-modus],[data-aufdecken],[data-bewerten],[data-pruefen],[data-option],[data-teilen],[data-loeschen],[data-speichern]");
+  const z = e.target.closest("[data-nav],[data-liste],[data-richtung],[data-spalte],[data-zeile],[data-modus],[data-aufdecken],[data-bewerten],[data-pruefen],[data-weiter],[data-teilen],[data-loeschen],[data-speichern]");
   if (!z) return;
   const d = z.dataset;
 
-  if (d.nav){ if (d.nav !== "alle") S.gezeigt = {}; S.ansicht = d.nav; if (S.sitzung && d.nav !== "uebung") S.sitzung.optionen = null; return zeichnen(); }
+  if (d.nav){ if (d.nav !== "alle") S.gezeigt = {}; S.ansicht = d.nav; return zeichnen(); }
   if (d.liste){ S.aktiv = d.liste; S.ansicht = "liste"; return zeichnen(); }
   if (d.richtung){ S.richtung = d.richtung; return zeichnen(); }
   if (d.spalte){ S.spalte = d.spalte; S.gezeigt = {}; return zeichnen(); }
@@ -578,7 +582,6 @@ APP.addEventListener("click", e => {
     if (S.spalte === "beide") return;
     S.gezeigt[d.zeile] = !S.gezeigt[d.zeile]; return zeichnen();
   }
-
   if (d.modus){
     const l = S.listen.find(x => x.id === S.aktiv);
     if (l && l.woerter.length) sitzungStarten(l, d.modus);
@@ -587,19 +590,7 @@ APP.addEventListener("click", e => {
   if (d.aufdecken){ S.sitzung.aufgedeckt = true; return zeichnen(); }
   if (d.bewerten !== undefined){ return bewerten(d.bewerten === "1"); }
   if (d.pruefen){ return pruefenSchreiben(); }
-
-  if (d.option !== undefined){
-    const s = S.sitzung;
-    if (s.geprueft !== null) return;
-    const w = s.schlange[s.pos].wort;
-    const loesung = s.aktuelleRichtung === "en-de" ? w.de : w.en;
-    s.gewaehlt = +d.option;
-    s.geprueft = s.optionen[s.gewaehlt] === loesung;
-    zeichnen();
-    const korrekt = s.geprueft;
-    s.optionen = null;
-    return bewerten(korrekt);
-  }
+  if (d.weiter){ return weiter(); }
 
   if (d.teilen){
     const l = S.listen.find(x => x.id === S.aktiv);
@@ -615,9 +606,9 @@ APP.addEventListener("click", e => {
   }
   if (d.speichern){
     const titel = (document.getElementById("titel").value || "").trim() || "Ohne Titel";
-    const paare = paareAusText(document.getElementById("paste").value);
-    if (!paare.length){ alert("Keine Wortpaare gefunden. Schreib pro Zeile: english = deutsch"); return; }
-    const l = hinzufuegen(listeAnlegen(titel, paare));
+    const eintraege = eintraegeAusText(document.getElementById("paste").value);
+    if (!eintraege.length){ alert("Keine Wortpaare gefunden."); return; }
+    const l = hinzufuegen(listeAnlegen(titel, eintraege));
     S.aktiv = l.id; S.ansicht = "liste"; return zeichnen();
   }
 });
@@ -631,15 +622,18 @@ async function ausDatei(){
     const listen = Array.isArray(daten) ? daten : (daten.listen || []);
     let neu = false;
     listen.forEach(o => {
-      const paare = (o.woerter || o.w || []).map(w => Array.isArray(w) ? w : [w.en, w.de, w.nurKarten]);
-      if (!paare.length) return;
-      const l = listeAnlegen(o.titel || o.t || "Liste", paare);
+      const eintraege = (o.woerter || o.w || []).map(w => Array.isArray(w)
+        ? { a:w[0], b:w[1], nk:w[2], h:w[3] }
+        : { a: w.a !== undefined ? w.a : w.en,
+            b: w.b !== undefined ? w.b : w.de,
+            h: w.hinweis || w.h || "", nk: w.nurKarten || w.nk });
+      if (!eintraege.length) return;
+      const l = listeAnlegen(o.titel || o.t || "Liste", eintraege);
       if (!S.listen.some(x => x.id === l.id)){ S.listen.push(l); neu = true; }
     });
     if (neu){ sichern(); zeichnen(); }
   } catch(e){}
 }
-
 function ausLink(){
   const m = location.hash.match(/^#l=(.+)$/);
   if (!m) return;
