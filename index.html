@@ -342,7 +342,14 @@ function kopf(titel, zurueckZu){
 function escape_(s){
   return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 }
+let letzterSchluessel = null;
+function ansichtSchluessel(){                 // was ist "ein neuer Bildschirm"?
+  return [S.ansicht, S.aktiv || "", S.sitzung ? S.sitzung.pos : ""].join("|");
+}
 function zeichnen(){
+  const schluessel = ansichtSchluessel();
+  const neuerBildschirm = schluessel !== letzterSchluessel;
+  const y = window.scrollY;
   APP.innerHTML = "";
   if (S.ansicht === "bibliothek") bibliothek();
   else if (S.ansicht === "liste")  listenansicht();
@@ -350,7 +357,8 @@ function zeichnen(){
   else if (S.ansicht === "uebung") uebung();
   else if (S.ansicht === "ergebnis") ergebnis();
   else if (S.ansicht === "neu")    neueListe();
-  window.scrollTo(0,0);
+  window.scrollTo(0, neuerBildschirm ? 0 : y);
+  letzterSchluessel = schluessel;
 }
 
 function bibliothek(){
