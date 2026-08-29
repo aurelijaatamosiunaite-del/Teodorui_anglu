@@ -113,6 +113,8 @@ input[type=text]{
 .pruefzeile.ok .zeichen{color:var(--richtig)}
 .pruefzeile.nein{border-color:var(--falsch)}
 .pruefzeile.nein .zeichen{color:var(--falsch)}
+.pruefzeile.neutral{border-color:var(--rand);border-style:dashed}
+.pruefzeile.neutral .zeichen{color:var(--grau)}
 .pruefzeile small{display:block;color:var(--grau);font-family:var(--mono);font-size:12px;margin-top:2px}
 .rueckmeldung{text-align:center;font-weight:600;margin:0 0 12px;min-height:24px}
 .rueckmeldung.ok{color:var(--richtig)}
@@ -186,7 +188,7 @@ function idVon(titel, woerter){
 function listeAnlegen(titel, eintraege){
   const woerter = eintraege.map(e => ({
     a: e.a, b: Array.isArray(e.b) ? e.b : [e.b],
-    h: e.h || "", nk: e.nk ? 1 : 0, stufe: 0
+    h: e.h || "", g: e.g || "", nk: e.nk ? 1 : 0, stufe: 0
   }));
   return { id: idVon(titel, woerter), titel, woerter, erstellt: Date.now() };
 }
@@ -205,8 +207,9 @@ const fortschritt = l => {
 function kodieren(liste){
   const kurz = { t: liste.titel, w: liste.woerter.map(w => {
     const e = [w.a, w.b.length === 1 ? w.b[0] : w.b];
-    if (w.nk || w.h) e.push(w.nk ? 1 : 0);
-    if (w.h) e.push(w.h);
+    if (w.g)       e.push(w.nk ? 1 : 0, w.h || "", w.g);
+    else if (w.h)  e.push(w.nk ? 1 : 0, w.h);
+    else if (w.nk) e.push(1);
     return e;
   })};
   const bytes = new TextEncoder().encode(JSON.stringify(kurz));
@@ -218,7 +221,7 @@ function dekodieren(code){
   const bytes = Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const o = JSON.parse(new TextDecoder().decode(bytes));
   return listeAnlegen(o.t || "Neue Liste",
-    (o.w || []).map(e => ({ a:e[0], b:e[1], nk:e[2], h:e[3] })));
+    (o.w || []).map(e => ({ a:e[0], b:e[1], nk:e[2], h:e[3], g:e[4] })));
 }
 const linkVon = liste => location.origin + location.pathname + "#l=" + kodieren(liste);
 
@@ -282,6 +285,21 @@ function pruefeAntwort(eingabe, loesung){          // "ok" | "fast" | "nein"
   if (eingaben.some(e => varianten.some(v => v.length >= 5 && abstand(e,v) === 1))) return "fast";
   return "nein";
 }
+/* Deklination / Konjugation: grosszügig prüfen.
+   "o-Dekl.", "o Dekl", "odekl", "o-Deklination" gelten alle als dasselbe. */
+function normKlasse(s){
+  return String(s).toLowerCase()
+    .replace(/[āăàáâ]/g,"a").replace(/[ōòóô]/g,"o").replace(/[ūùúû]/g,"u")
+    .replace(/[ēéèê]/g,"e").replace(/[īìíî]/g,"i")
+    .replace(/[^a-z0-9]/g,"")
+    .replace(/deklination|deklin|dekli/g,"dekl")
+    .replace(/konjugation|konjug|konju/g,"konj");
+}
+function pruefeKlasse(eingabe, loesung){
+  const e = normKlasse(eingabe);
+  return !!e && e === normKlasse(loesung);
+}
+
 /* Mehrere Felder gegen mehrere Lösungen, Reihenfolge egal. */
 function pruefeAlle(eingaben, loesungen){
   const offen = loesungen.map((l,i) => i);
@@ -313,6 +331,7 @@ function richtungFuer(){
 function weiter(){
   const s = S.sitzung;
   s.pos++; s.aufgedeckt = false; s.geprueft = null; s.warte = false; s.aktuelleRichtung = null;
+  s.klasseEingabe = ""; s.klasseRichtig = false;
   S.ansicht = s.pos >= s.schlange.length ? "ergebnis" : "uebung";
   zeichnen();
 }
@@ -432,7 +451,7 @@ function alleWoerter(){
   l.woerter.forEach((w,i) => {
     const zeigen = S.spalte === "beide" || S.gezeigt[i];
     const seiteA = escape_(w.a) + (w.h ? `<span class="gram-klein">${escape_(w.h)}</span>` : "");
-    const seiteB = escape_(w.b.join(", "));
+    const seiteB = escape_(w.b.join(", ")) + (w.g ? `<span class="gram-klein">${escape_(w.g)}</span>` : "");
     const feld = (inhalt, klasse, weg) => zeigen || !weg
       ? `<span class="${klasse}">${inhalt}</span>`
       : `<span class="${klasse} verdeckt"></span>`;
@@ -476,7 +495,8 @@ function uebung(){
     h += `<div class="karte buehne">
       <div class="hinweis">${escape_(vonA ? KONFIG.spracheA : KONFIG.spracheB)}${eintrag.wiederholung ? " · nochmal" : ""}</div>
       <div class="frage">${escape_(frage)}</div>${gram}
-      ${s.aufgedeckt ? `<div class="antwort">${loesungen.map(x => `<div>${escape_(x)}</div>`).join("")}</div>` : ""}
+      ${s.aufgedeckt ? `<div class="antwort">${loesungen.map(x => `<div>${escape_(x)}</div>`).join("")}${
+        vonA && w.g ? `<div class="gram" style="margin-top:11px">${escape_(w.g)}</div>` : ""}</div>` : ""}
     </div>`;
     h += s.aufgedeckt
       ? `<div class="reihe">
@@ -488,6 +508,7 @@ function uebung(){
 
   if (s.modus === "schreiben"){
     const ziel = vonA ? KONFIG.spracheB : KONFIG.spracheA;
+    const klasseGefragt = vonA && !!w.g;
     h += `<div class="karte buehne">
       <div class="hinweis">Wie heißt das auf ${escape_(ziel)}?${eintrag.wiederholung ? " · nochmal" : ""}</div>
       <div class="frage">${escape_(frage)}</div>${gram}
@@ -498,6 +519,10 @@ function uebung(){
         `<input type="text" id="feld${i}" data-feld="${i}" autocomplete="off" autocorrect="off"
                 autocapitalize="none" spellcheck="false"
                 placeholder="${loesungen.length > 1 ? (i+1) + ". Antwort" : escape_(ziel)}">`).join("");
+      if (klasseGefragt)
+        h += `<input type="text" id="feldK" autocomplete="off" autocorrect="off"
+                     autocapitalize="none" spellcheck="false"
+                     style="margin-top:5px" placeholder="Dekl. oder Konj.">`;
       h += `<button class="knopf" data-pruefen="1">Prüfen</button>`;
     } else {
       const r = s.geprueft;
@@ -513,6 +538,14 @@ function uebung(){
         h += `<div class="pruefzeile nein"><span class="zeichen">&#8594;</span>
                 <span>${escape_(loesungen[j])}<small>gefehlt</small></span></div>`;
       });
+      if (klasseGefragt){
+        const eingK = s.klasseEingabe || "";
+        h += s.klasseRichtig
+          ? `<div class="pruefzeile ok"><span class="zeichen">&#10003;</span>
+               <span>${escape_(w.g)}</span></div>`
+          : `<div class="pruefzeile neutral"><span class="zeichen">&#8594;</span>
+               <span>${escape_(w.g)}<small>${eingK ? "getippt: " + escape_(eingK) + " · " : ""}zählt nicht als Fehler</small></span></div>`;
+      }
       h += `</div>`;
       h += r.alleRichtig
         ? `<div class="rueckmeldung ok">Richtig</div>`
@@ -524,11 +557,14 @@ function uebung(){
   const erstes = document.getElementById("feld0");
   if (erstes){
     erstes.focus();
-    loesungen.forEach((_,i) => {
-      const f = document.getElementById("feld" + i);
+    const kette = loesungen.map((_,i) => document.getElementById("feld" + i));
+    const kFeld = document.getElementById("feldK");
+    if (kFeld) kette.push(kFeld);
+    kette.forEach((f,i) => {
+      if (!f) return;
       f.addEventListener("keydown", e => {
         if (e.key !== "Enter") return;
-        const naechstes = document.getElementById("feld" + (i+1));
+        const naechstes = kette[i+1];
         if (naechstes) naechstes.focus(); else pruefenSchreiben();
       });
     });
@@ -540,6 +576,8 @@ function pruefenSchreiben(){
   const vonA = s.aktuelleRichtung === "ab";
   const loesungen = vonA ? w.b : [w.a];
   s.eingaben = loesungen.map((_,i) => (document.getElementById("feld" + i) || {}).value || "");
+  s.klasseEingabe = ((document.getElementById("feldK") || {}).value || "").trim();
+  s.klasseRichtig = vonA && w.g ? pruefeKlasse(s.klasseEingabe, w.g) : false;
   s.geprueft = pruefeAlle(s.eingaben, loesungen);
   zeichnen();
   bewerten(s.geprueft.alleRichtig);
@@ -631,10 +669,11 @@ async function ausDatei(){
     let neu = false;
     listen.forEach(o => {
       const eintraege = (o.woerter || o.w || []).map(w => Array.isArray(w)
-        ? { a:w[0], b:w[1], nk:w[2], h:w[3] }
+        ? { a:w[0], b:w[1], nk:w[2], h:w[3], g:w[4] }
         : { a: w.a !== undefined ? w.a : w.en,
             b: w.b !== undefined ? w.b : w.de,
-            h: w.hinweis || w.h || "", nk: w.nurKarten || w.nk });
+            h: w.hinweis || w.h || "", g: w.grammatik || w.g || "",
+            nk: w.nurKarten || w.nk });
       if (!eintraege.length) return;
       const l = listeAnlegen(o.titel || o.t || "Liste", eintraege);
       if (!S.listen.some(x => x.id === l.id)){ S.listen.push(l); neu = true; }
