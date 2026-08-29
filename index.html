@@ -165,7 +165,7 @@ const KONFIG = {
 
 const APP = document.getElementById("app");
 let S = { listen: [], aktiv: null, richtung: KONFIG.richtungen[0], ansicht: "bibliothek",
-          sitzung: null, spalte: "beide", gezeigt: {} };
+          sitzung: null, spalte: "beide", gezeigt: {}, meldung: "" };
 
 /* ============ Daten ============ */
 function laden(){
@@ -175,13 +175,28 @@ function laden(){
     if (w.a === undefined){ w.a = w.en; w.b = [w.de]; delete w.en; delete w.de; }
     if (!Array.isArray(w.b)) w.b = [w.b];
   }));
-  S.listen = roh;
+  // Ab dieser Version hängt die id nur am Titel: alte ids umrechnen und
+  // gleichnamige Listen zusammenlegen, damit nichts doppelt herumliegt.
+  const zusammen = [];
+  roh.forEach(l => {
+    l.id = idVon(l.titel);
+    const da = zusammen.find(x => x.id === l.id);
+    if (!da){ zusammen.push(l); return; }
+    (l.woerter || []).forEach(w => {
+      const alt = da.woerter.find(x => wortSchluessel(x.a) === wortSchluessel(w.a));
+      if (!alt) da.woerter.push(w);
+      else if ((w.stufe||0) > (alt.stufe||0)) alt.stufe = w.stufe;
+    });
+    da.erstellt = Math.max(da.erstellt||0, l.erstellt||0);
+  });
+  S.listen = zusammen;
+  sichern();
 }
 function sichern(){
   try { localStorage.setItem(KONFIG.speicher, JSON.stringify(S.listen)); } catch(e){}
 }
-function idVon(titel, woerter){
-  let h = 0; const s = titel + "|" + woerter.map(w => w.a).join(",");
+function idVon(titel){
+  let h = 0; const s = "T|" + String(titel).trim().toLowerCase();
   for (let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; }
   return "l" + Math.abs(h).toString(36);
 }
@@ -190,12 +205,30 @@ function listeAnlegen(titel, eintraege){
     a: e.a, b: Array.isArray(e.b) ? e.b : [e.b],
     h: e.h || "", g: e.g || "", nk: e.nk ? 1 : 0, stufe: 0
   }));
-  return { id: idVon(titel, woerter), titel, woerter, erstellt: Date.now() };
+  return { id: idVon(titel), titel, woerter, erstellt: Date.now() };
 }
+/* Gleicher Titel = gleiche Liste. Neue Wörter kommen dazu, bekannte behalten
+   ihre Stufe; entfernt wird nie etwas (sonst würde eine Nachlieferung mit nur
+   den neuen Wörtern den Rest löschen). */
+let zuletztGeaendert = false, zuletztNeu = 0;
 function hinzufuegen(liste){
+  zuletztGeaendert = false; zuletztNeu = 0;
   const vorhanden = S.listen.find(l => l.id === liste.id);
-  if (vorhanden) return vorhanden;
-  S.listen.unshift(liste); sichern(); return liste;
+  if (!vorhanden){
+    S.listen.unshift(liste); zuletztGeaendert = true; sichern(); return liste;
+  }
+  liste.woerter.forEach(w => {
+    const alt = vorhanden.woerter.find(x => wortSchluessel(x.a) === wortSchluessel(w.a));
+    if (alt){
+      if (JSON.stringify([alt.b,alt.h,alt.g,alt.nk]) !== JSON.stringify([w.b,w.h,w.g,w.nk]))
+        zuletztGeaendert = true;
+      alt.a = w.a; alt.b = w.b; alt.h = w.h; alt.g = w.g; alt.nk = w.nk;
+    } else {
+      vorhanden.woerter.push(w); zuletztGeaendert = true; zuletztNeu++;
+    }
+  });
+  if (zuletztGeaendert){ vorhanden.erstellt = Date.now(); sichern(); }
+  return vorhanden;
 }
 const fortschritt = l => {
   if (!l.woerter.length) return 0;
@@ -285,13 +318,19 @@ function pruefeAntwort(eingabe, loesung){          // "ok" | "fast" | "nein"
   if (eingaben.some(e => varianten.some(v => v.length >= 5 && abstand(e,v) === 1))) return "fast";
   return "nein";
 }
+/* Umlaute, Makra, Satzzeichen wegfalten – für Wortschlüssel und Klassenprüfung. */
+function faltung(s){
+  return String(s).toLowerCase()
+    .replace(/[äàáâāă]/g,"a").replace(/[öòóôō]/g,"o").replace(/[üùúûū]/g,"u")
+    .replace(/[éèêëē]/g,"e").replace(/[ìíîī]/g,"i").replace(/ß/g,"ss")
+    .replace(/[^a-z0-9]/g,"");
+}
+const wortSchluessel = s => faltung(s);
+
 /* Deklination / Konjugation: grosszügig prüfen.
    "o-Dekl.", "o Dekl", "odekl", "o-Deklination" gelten alle als dasselbe. */
 function normKlasse(s){
-  return String(s).toLowerCase()
-    .replace(/[āăàáâ]/g,"a").replace(/[ōòóô]/g,"o").replace(/[ūùúû]/g,"u")
-    .replace(/[ēéèê]/g,"e").replace(/[īìíî]/g,"i")
-    .replace(/[^a-z0-9]/g,"")
+  return faltung(s)
     .replace(/deklination|deklin|dekli/g,"dekl")
     .replace(/konjugation|konjug|konju/g,"konj");
 }
@@ -423,7 +462,8 @@ function listenansicht(){
       <div class="linie-fortschritt" style="width:calc(${p}% - 10px)"></div>
       <div class="linie-halte">${halte}</div>
     </div>
-    <div class="meta" style="margin-bottom:22px">${p}% gelernt · ${l.woerter.length} Wörter</div>
+    <div class="meta" style="margin-bottom:22px">${p}% gelernt · ${l.woerter.length} Wörter${
+      S.meldung ? ` · <span style="color:var(--linie)">${escape_(S.meldung)}</span>` : ""}</div>
     ${richtungsWahl}
     ${modusKnoepfe}
     <button class="knopf sekundaer" data-nav="alle" style="margin-top:14px">Alle Wörter ansehen</button>
@@ -620,8 +660,8 @@ APP.addEventListener("click", e => {
   if (!z) return;
   const d = z.dataset;
 
-  if (d.nav){ if (d.nav !== "alle") S.gezeigt = {}; S.ansicht = d.nav; return zeichnen(); }
-  if (d.liste){ S.aktiv = d.liste; S.ansicht = "liste"; return zeichnen(); }
+  if (d.nav){ if (d.nav !== "alle") S.gezeigt = {}; S.meldung = ""; S.ansicht = d.nav; return zeichnen(); }
+  if (d.liste){ S.aktiv = d.liste; S.meldung = ""; S.ansicht = "liste"; return zeichnen(); }
   if (d.richtung){ S.richtung = d.richtung; return zeichnen(); }
   if (d.spalte){ S.spalte = d.spalte; S.gezeigt = {}; return zeichnen(); }
   if (d.zeile !== undefined){
@@ -676,7 +716,8 @@ async function ausDatei(){
             nk: w.nurKarten || w.nk });
       if (!eintraege.length) return;
       const l = listeAnlegen(o.titel || o.t || "Liste", eintraege);
-      if (!S.listen.some(x => x.id === l.id)){ S.listen.push(l); neu = true; }
+      hinzufuegen(l);
+      if (zuletztGeaendert) neu = true;
     });
     if (neu){ sichern(); zeichnen(); }
   } catch(e){}
@@ -685,7 +726,11 @@ function ausLink(){
   const m = location.hash.match(/^#l=(.+)$/);
   if (!m) return;
   try {
+    const vorherDa = S.listen.length;
     const l = hinzufuegen(dekodieren(m[1]));
+    if (S.listen.length === vorherDa && zuletztNeu)
+      S.meldung = zuletztNeu === 1 ? "1 neues Wort dazugekommen"
+                                   : zuletztNeu + " neue Wörter dazugekommen";
     S.aktiv = l.id; S.ansicht = "liste";
   } catch(e){}
   history.replaceState(null, "", location.pathname);
