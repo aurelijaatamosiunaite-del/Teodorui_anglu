@@ -1,6 +1,556 @@
 {
   "listen": [
     {
+      "titel": "Unit 1 (2026/27)",
+      "woerter": [
+        {
+          "a": "litter bin, bin",
+          "b": [
+            "Abfalleimer"
+          ]
+        },
+        {
+          "a": "apartment",
+          "b": [
+            "Wohnung"
+          ]
+        },
+        {
+          "a": "screen",
+          "b": [
+            "Bildschirm"
+          ]
+        },
+        {
+          "a": "fries",
+          "h": "pl., American English",
+          "b": [
+            "Pommes frites"
+          ]
+        },
+        {
+          "a": "(to) wash the dishes",
+          "b": [
+            "das Geschirr abwaschen, das Geschirr spülen, abwaschen, spülen"
+          ]
+        },
+        {
+          "a": "to",
+          "b": [
+            "um zu"
+          ]
+        },
+        {
+          "a": "(to) land",
+          "b": [
+            "landen, an Land gehen"
+          ]
+        },
+        {
+          "a": "land",
+          "b": [
+            "Land"
+          ]
+        },
+        {
+          "a": "right now",
+          "b": [
+            "jetzt gerade"
+          ]
+        },
+        {
+          "a": "(to) order",
+          "b": [
+            "bestellen"
+          ]
+        },
+        {
+          "a": "pancake",
+          "b": [
+            "Pfannkuchen, Eierkuchen"
+          ]
+        },
+        {
+          "a": "outside Rosie's Diner",
+          "b": [
+            "vor Rosie's Diner, außerhalb Rosie's Diner"
+          ]
+        },
+        {
+          "a": "campsite",
+          "b": [
+            "Zeltplatz"
+          ]
+        },
+        {
+          "a": "next to",
+          "b": [
+            "neben"
+          ]
+        },
+        {
+          "a": "tent",
+          "b": [
+            "Zelt"
+          ]
+        },
+        {
+          "a": "rocky",
+          "b": [
+            "felsig, steinig"
+          ]
+        },
+        {
+          "a": "shadow",
+          "b": [
+            "Schatten"
+          ]
+        },
+        {
+          "a": "fire",
+          "b": [
+            "Feuer"
+          ]
+        },
+        {
+          "a": "(to) look up",
+          "b": [
+            "hochsehen, aufschauen"
+          ]
+        },
+        {
+          "a": "sky",
+          "b": [
+            "Himmel"
+          ]
+        },
+        {
+          "a": "(to) be asleep",
+          "b": [
+            "schlafen"
+          ]
+        },
+        {
+          "a": "torch",
+          "b": [
+            "Taschenlampe"
+          ]
+        },
+        {
+          "a": "so that …",
+          "h": "oft auch kurz: so",
+          "b": [
+            "sodass, damit"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "wild",
+          "b": [
+            "wild"
+          ]
+        },
+        {
+          "a": "again and again",
+          "b": [
+            "immer wieder"
+          ]
+        },
+        {
+          "a": "(to) turn sth. off",
+          "b": [
+            "etwas ausschalten"
+          ]
+        },
+        {
+          "a": "(to) give sb. a hug",
+          "b": [
+            "jn. umarmen"
+          ]
+        },
+        {
+          "a": "this time",
+          "b": [
+            "dieses Mal"
+          ]
+        },
+        {
+          "a": "my own film/room …",
+          "b": [
+            "mein eigener Film / mein eigenes Zimmer …"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "subject",
+          "b": [
+            "Subjekt"
+          ]
+        },
+        {
+          "a": "object",
+          "b": [
+            "Objekt"
+          ]
+        },
+        {
+          "a": "(to) get in touch (with sb.)",
+          "b": [
+            "(mit jm.) Kontakt aufnehmen, sich (mit jm.) in Verbindung setzen"
+          ]
+        },
+        {
+          "a": "(to) stay in touch (with sb.)",
+          "b": [
+            "(mit jm.) Kontakt halten, (mit jm.) in Verbindung bleiben"
+          ]
+        },
+        {
+          "a": "text message",
+          "h": "kurz auch: text",
+          "b": [
+            "SMS"
+          ]
+        },
+        {
+          "a": "free",
+          "b": [
+            "kostenlos"
+          ]
+        },
+        {
+          "a": "rule",
+          "b": [
+            "Regel, Vorschrift"
+          ]
+        },
+        {
+          "a": "host family",
+          "b": [
+            "Gastfamilie"
+          ]
+        },
+        {
+          "a": "meaning",
+          "b": [
+            "Bedeutung"
+          ]
+        },
+        {
+          "a": "context",
+          "b": [
+            "Zusammenhang, Textzusammenhang, Satzzusammenhang, Kontext"
+          ]
+        },
+        {
+          "a": "must",
+          "b": [
+            "müssen"
+          ]
+        },
+        {
+          "a": "similar (to sth./sb.)",
+          "b": [
+            "(etwas/jm.) ähnlich"
+          ]
+        },
+        {
+          "a": "(to) walk/run/sail … on",
+          "b": [
+            "weitergehen/-laufen/-segeln …"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "just like …",
+          "b": [
+            "genau wie …"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "(to) be/feel bored",
+          "b": [
+            "gelangweilt sein, sich langweilen"
+          ]
+        },
+        {
+          "a": "term",
+          "b": [
+            "Trimester"
+          ]
+        },
+        {
+          "a": "boarding school",
+          "b": [
+            "Internat"
+          ]
+        },
+        {
+          "a": "shocked",
+          "b": [
+            "schockiert, entsetzt"
+          ]
+        },
+        {
+          "a": "outdoor",
+          "b": [
+            "Außen-, im Freien"
+          ]
+        },
+        {
+          "a": "(to) climb",
+          "b": [
+            "klettern"
+          ]
+        },
+        {
+          "a": "(to) look forward to sth.",
+          "b": [
+            "sich auf etwas freuen"
+          ]
+        },
+        {
+          "a": "tear",
+          "b": [
+            "Träne"
+          ]
+        },
+        {
+          "a": "unhappy",
+          "b": [
+            "unglücklich"
+          ]
+        },
+        {
+          "a": "future",
+          "b": [
+            "Zukunft, zukünftig"
+          ]
+        },
+        {
+          "a": "jacket",
+          "b": [
+            "Jacke, Jackett"
+          ]
+        },
+        {
+          "a": "pocket",
+          "b": [
+            "Tasche, Hosentasche"
+          ]
+        },
+        {
+          "a": "crib sheet",
+          "b": [
+            "Spickzettel, Merkzettel"
+          ]
+        },
+        {
+          "a": "neighbour",
+          "b": [
+            "Nachbar, Nachbarin"
+          ]
+        },
+        {
+          "a": "tea",
+          "b": [
+            "leichte Nachmittagsmahlzeit oder Abendmahlzeit"
+          ]
+        },
+        {
+          "a": "Love …",
+          "h": "Briefschluss",
+          "b": [
+            "Alles Liebe …, Liebe Grüße …"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "Who did you tell?",
+          "b": [
+            "Wem hast du es erzählt?"
+          ]
+        },
+        {
+          "a": "Who does Sam know?",
+          "b": [
+            "Wen kennt Sam?"
+          ]
+        },
+        {
+          "a": "for example",
+          "b": [
+            "zum Beispiel"
+          ]
+        },
+        {
+          "a": "surprise",
+          "b": [
+            "Überraschung"
+          ]
+        },
+        {
+          "a": "still",
+          "b": [
+            "trotzdem, dennoch"
+          ]
+        },
+        {
+          "a": "this afternoon/evening …",
+          "b": [
+            "heute Nachmittag/Abend …"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "(to) move (to)",
+          "b": [
+            "umziehen (nach)"
+          ]
+        },
+        {
+          "a": "son",
+          "b": [
+            "Sohn"
+          ]
+        },
+        {
+          "a": "daughter",
+          "b": [
+            "Tochter"
+          ]
+        },
+        {
+          "a": "already",
+          "b": [
+            "schon, bereits"
+          ]
+        },
+        {
+          "a": "sure",
+          "b": [
+            "sicher"
+          ]
+        },
+        {
+          "a": "(to) invite sb. (to)",
+          "b": [
+            "jn. einladen (zu)"
+          ]
+        },
+        {
+          "a": "ever",
+          "b": [
+            "jemals"
+          ]
+        },
+        {
+          "a": "Lucky you!",
+          "b": [
+            "Du Glückspilz!"
+          ]
+        },
+        {
+          "a": "(to) be lucky",
+          "b": [
+            "Glück haben"
+          ]
+        },
+        {
+          "a": "(to) look after sb.",
+          "b": [
+            "auf jn. aufpassen, sich um jn. kümmern"
+          ]
+        },
+        {
+          "a": "(to) be allowed to do sth.",
+          "b": [
+            "etwas tun dürfen"
+          ]
+        },
+        {
+          "a": "(to) hit",
+          "h": "simple past: hit",
+          "b": [
+            "schlagen"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "(to) roll",
+          "b": [
+            "rollen"
+          ]
+        },
+        {
+          "a": "out",
+          "b": [
+            "heraus, hinaus, nach draußen"
+          ]
+        },
+        {
+          "a": "prize",
+          "b": [
+            "Preis, Gewinn"
+          ]
+        },
+        {
+          "a": "Here you are.",
+          "b": [
+            "Bitte sehr!, Hier bitte!"
+          ]
+        },
+        {
+          "a": "… right?",
+          "b": [
+            "… nicht wahr?"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "(to) mean",
+          "h": "simple past: meant",
+          "b": [
+            "bedeuten"
+          ],
+          "nurKarten": true
+        },
+        {
+          "a": "if",
+          "b": [
+            "wenn, falls"
+          ]
+        },
+        {
+          "a": "revision",
+          "b": [
+            "Wiederholung (des Lernstoffs)"
+          ]
+        },
+        {
+          "a": "(to) make notes (on sth.)",
+          "h": "zur Vorbereitung",
+          "b": [
+            "(sich) Notizen machen (über/zu etwas)"
+          ]
+        },
+        {
+          "a": "Hold on a minute.",
+          "h": "oft auch kurz: Hold on.",
+          "b": [
+            "Bleib am Apparat, Bleiben Sie am Apparat"
+          ]
+        },
+        {
+          "a": "memory",
+          "b": [
+            "Erinnerung"
+          ]
+        }
+      ]
+    },
+    {
       "titel": "Unit 1 – In the holidays",
       "woerter": [
         {
