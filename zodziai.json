@@ -1,6 +1,368 @@
 {
   "listen": [
     {
+      "titel": "Irregular verbs",
+      "woerter": [
+        {
+          "a": "(to) be",
+          "p": "was / were",
+          "b": [
+            "sein"
+          ]
+        },
+        {
+          "a": "(to) become",
+          "p": "became",
+          "b": [
+            "werden"
+          ]
+        },
+        {
+          "a": "(to) begin",
+          "p": "began",
+          "b": [
+            "beginnen, anfangen"
+          ]
+        },
+        {
+          "a": "(to) bite",
+          "p": "bit",
+          "b": [
+            "beißen"
+          ]
+        },
+        {
+          "a": "(to) blow (sth.) out",
+          "p": "blew",
+          "b": [
+            "(etwas) auspusten, ausblasen"
+          ]
+        },
+        {
+          "a": "(to) break",
+          "p": "broke",
+          "b": [
+            "brechen; zerbrechen"
+          ]
+        },
+        {
+          "a": "(to) bring",
+          "p": "brought",
+          "b": [
+            "bringen, mitbringen, herbringen"
+          ]
+        },
+        {
+          "a": "(to) build",
+          "p": "built",
+          "b": [
+            "bauen"
+          ]
+        },
+        {
+          "a": "(to) buy",
+          "p": "bought",
+          "b": [
+            "kaufen"
+          ]
+        },
+        {
+          "a": "(to) catch",
+          "p": "caught",
+          "b": [
+            "fangen"
+          ]
+        },
+        {
+          "a": "(to) choose",
+          "p": "chose",
+          "b": [
+            "aussuchen, (aus)wählen; sich aussuchen"
+          ]
+        },
+        {
+          "a": "(to) come",
+          "p": "came",
+          "b": [
+            "kommen"
+          ]
+        },
+        {
+          "a": "(to) cost",
+          "p": "cost",
+          "b": [
+            "kosten"
+          ]
+        },
+        {
+          "a": "(to) cut",
+          "p": "cut",
+          "b": [
+            "schneiden"
+          ]
+        },
+        {
+          "a": "(to) do",
+          "p": "did",
+          "b": [
+            "tun, machen"
+          ]
+        },
+        {
+          "a": "(to) draw",
+          "p": "drew",
+          "b": [
+            "zeichnen"
+          ]
+        },
+        {
+          "a": "(to) drive",
+          "p": "drove",
+          "b": [
+            "(mit dem Auto) fahren"
+          ]
+        },
+        {
+          "a": "(to) drink",
+          "p": "drank",
+          "b": [
+            "trinken"
+          ]
+        },
+        {
+          "a": "(to) eat",
+          "p": "ate",
+          "b": [
+            "essen"
+          ]
+        },
+        {
+          "a": "(to) fall",
+          "p": "fell",
+          "b": [
+            "fallen, stürzen; hinfallen"
+          ]
+        },
+        {
+          "a": "(to) feed",
+          "p": "fed",
+          "b": [
+            "füttern"
+          ]
+        },
+        {
+          "a": "(to) feel",
+          "p": "felt",
+          "b": [
+            "fühlen; sich fühlen"
+          ]
+        },
+        {
+          "a": "(to) fight",
+          "p": "fought",
+          "b": [
+            "(be)kämpfen"
+          ]
+        },
+        {
+          "a": "(to) find",
+          "p": "found",
+          "b": [
+            "finden"
+          ]
+        },
+        {
+          "a": "(to) fly",
+          "p": "flew",
+          "b": [
+            "fliegen"
+          ]
+        },
+        {
+          "a": "(to) forget",
+          "p": "forgot",
+          "b": [
+            "vergessen"
+          ]
+        },
+        {
+          "a": "(to) get",
+          "p": "got",
+          "b": [
+            "bekommen; holen, besorgen; werden; gelangen, (hin)kommen"
+          ]
+        },
+        {
+          "a": "(to) give",
+          "p": "gave",
+          "b": [
+            "geben"
+          ]
+        },
+        {
+          "a": "(to) go",
+          "p": "went",
+          "b": [
+            "gehen"
+          ]
+        },
+        {
+          "a": "(to) grow",
+          "p": "grew",
+          "b": [
+            "wachsen; anbauen, anpflanzen"
+          ]
+        },
+        {
+          "a": "(to) hang",
+          "p": "hung",
+          "b": [
+            "hängen"
+          ]
+        },
+        {
+          "a": "(to) have",
+          "p": "had",
+          "b": [
+            "haben"
+          ]
+        },
+        {
+          "a": "(to) hear",
+          "p": "heard",
+          "b": [
+            "hören"
+          ]
+        },
+        {
+          "a": "(to) hide",
+          "p": "hid",
+          "b": [
+            "verstecken; sich verstecken"
+          ]
+        },
+        {
+          "a": "(to) hit",
+          "p": "hit",
+          "b": [
+            "schlagen"
+          ]
+        },
+        {
+          "a": "(to) hold",
+          "p": "held",
+          "b": [
+            "halten"
+          ]
+        },
+        {
+          "a": "(to) hurt",
+          "p": "hurt",
+          "b": [
+            "schmerzen, wehtun; verletzen"
+          ]
+        },
+        {
+          "a": "(to) kneel",
+          "p": "knelt",
+          "b": [
+            "knien"
+          ]
+        },
+        {
+          "a": "(to) know",
+          "p": "knew",
+          "b": [
+            "wissen; kennen"
+          ]
+        },
+        {
+          "a": "(to) leave",
+          "p": "left",
+          "b": [
+            "(weg)gehen; abfahren; (zurück)lassen; verlassen"
+          ]
+        },
+        {
+          "a": "(to) let",
+          "p": "let",
+          "b": [
+            "lassen"
+          ]
+        },
+        {
+          "a": "(to) lie",
+          "p": "lay",
+          "b": [
+            "liegen"
+          ]
+        },
+        {
+          "a": "(to) light",
+          "p": "lit",
+          "b": [
+            "anzünden"
+          ]
+        },
+        {
+          "a": "(to) lose",
+          "p": "lost",
+          "b": [
+            "verlieren"
+          ]
+        },
+        {
+          "a": "(to) make",
+          "p": "made",
+          "b": [
+            "machen; herstellen"
+          ]
+        },
+        {
+          "a": "(to) mean",
+          "p": "meant",
+          "b": [
+            "bedeuten; meinen"
+          ]
+        },
+        {
+          "a": "(to) meet",
+          "p": "met",
+          "b": [
+            "treffen; sich treffen; kennenlernen"
+          ]
+        },
+        {
+          "a": "(to) pay",
+          "p": "paid",
+          "b": [
+            "bezahlen"
+          ]
+        },
+        {
+          "a": "(to) put",
+          "p": "put",
+          "b": [
+            "(etwas wohin) tun, legen, stellen"
+          ]
+        },
+        {
+          "a": "(to) read",
+          "p": "read",
+          "b": [
+            "lesen"
+          ]
+        },
+        {
+          "a": "(to) ride",
+          "p": "rode",
+          "b": [
+            "reiten; (Rad) fahren"
+          ]
+        }
+      ]
+    },
+    {
       "titel": "My USA Logbook and more",
       "woerter": [
         {

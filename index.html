@@ -97,6 +97,8 @@ button{font-family:inherit;font-size:inherit;cursor:pointer}
 .gram{font-family:var(--mono);font-size:13px;color:var(--grau);margin-top:8px;letter-spacing:.06em}
 .antwort{font-family:var(--display);font-weight:600;font-size:clamp(20px,5.5vw,26px);color:var(--linie);letter-spacing:-.02em;margin-top:16px;padding-top:16px;border-top:1px dashed var(--rand);width:100%}
 .antwort div + div{margin-top:4px}
+.feldname{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.08em;color:var(--grau);margin-left:8px}
+.feldname-oben{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--grau);margin:10px 0 4px}
 .hinweis{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grau);margin-bottom:14px}
 input[type=text]{
   width:100%;padding:14px 16px;font-size:19px;font-family:var(--body);
@@ -203,7 +205,7 @@ function idVon(titel){
 function listeAnlegen(titel, eintraege){
   const woerter = eintraege.map(e => ({
     a: e.a, b: Array.isArray(e.b) ? e.b : [e.b],
-    h: e.h || "", g: e.g || "", nk: e.nk ? 1 : 0, stufe: 0
+    h: e.h || "", g: e.g || "", p: e.p || "", nk: e.nk ? 1 : 0, stufe: 0
   }));
   return { id: idVon(titel), titel, woerter, erstellt: Date.now() };
 }
@@ -220,9 +222,9 @@ function hinzufuegen(liste){
   liste.woerter.forEach(w => {
     const alt = vorhanden.woerter.find(x => wortSchluessel(x.a) === wortSchluessel(w.a));
     if (alt){
-      if (JSON.stringify([alt.b,alt.h,alt.g,alt.nk]) !== JSON.stringify([w.b,w.h,w.g,w.nk]))
+      if (JSON.stringify([alt.b,alt.h,alt.g,alt.p||"",alt.nk]) !== JSON.stringify([w.b,w.h,w.g,w.p,w.nk]))
         zuletztGeaendert = true;
-      alt.a = w.a; alt.b = w.b; alt.h = w.h; alt.g = w.g; alt.nk = w.nk;
+      alt.a = w.a; alt.b = w.b; alt.h = w.h; alt.g = w.g; alt.p = w.p; alt.nk = w.nk;
     } else {
       vorhanden.woerter.push(w); zuletztGeaendert = true; zuletztNeu++;
     }
@@ -240,7 +242,8 @@ const fortschritt = l => {
 function kodieren(liste){
   const kurz = { t: liste.titel, w: liste.woerter.map(w => {
     const e = [w.a, w.b.length === 1 ? w.b[0] : w.b];
-    if (w.g)       e.push(w.nk ? 1 : 0, w.h || "", w.g);
+    if (w.p)       e.push(w.nk ? 1 : 0, w.h || "", w.g || "", w.p);
+    else if (w.g)  e.push(w.nk ? 1 : 0, w.h || "", w.g);
     else if (w.h)  e.push(w.nk ? 1 : 0, w.h);
     else if (w.nk) e.push(1);
     return e;
@@ -254,7 +257,7 @@ function dekodieren(code){
   const bytes = Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const o = JSON.parse(new TextDecoder().decode(bytes));
   return listeAnlegen(o.t || "Neue Liste",
-    (o.w || []).map(e => ({ a:e[0], b:e[1], nk:e[2], h:e[3], g:e[4] })));
+    (o.w || []).map(e => ({ a:e[0], b:e[1], nk:e[2], h:e[3], g:e[4], p:e[5] })));
 }
 const linkVon = liste => location.origin + location.pathname + "#l=" + kodieren(liste);
 
@@ -339,6 +342,17 @@ function pruefeKlasse(eingabe, loesung){
   return !!e && e === normKlasse(loesung);
 }
 
+/* Geschlecht: h zählt nur dann als abfragbares Feld, wenn es genau "m.", "f." oder
+   "n." ist – andere Hinweise in h (z.B. "Inf.: esse") bleiben reine Anzeige. */
+function istGeschlecht(h){
+  return /^(m|f|n)\.?$/i.test(String(h||"").trim());
+}
+function pruefeGeschlecht(eingabe, loesung){
+  const e = String(eingabe||"").trim().toLowerCase().replace(/[^a-zäöüß]/g,"");
+  const l = String(loesung||"").trim().toLowerCase().replace(/[^a-zäöüß]/g,"");
+  return !!e && !!l && e.charAt(0) === l.charAt(0);
+}
+
 /* Mehrere Felder gegen mehrere Lösungen, Reihenfolge egal. */
 function pruefeAlle(eingaben, loesungen){
   const offen = loesungen.map((l,i) => i);
@@ -351,6 +365,30 @@ function pruefeAlle(eingaben, loesungen){
     });
   });
   return { treffer, fehlend: offen, alleRichtig: offen.length === 0 };
+}
+
+/* Unregelmäßige Verben: ein Wort mit p ("simple past") wird mit zwei Feldern abgefragt.
+   EN → DE: Simple past + Deutsch.   DE → EN: Infinitive + Simple past.
+   Englische Formen zählen nur exakt (bought ≠ brought), Deutsch verzeiht wie sonst
+   einen Tippfehler. In p heißt "," = eine davon reicht, "/" = alle nötig (was / were). */
+function verbFelder(w, vonA){
+  const anzahl = String(w.p).split(/\s*[,;]\s*/)[0].split("/").length;
+  const past = { name: "Simple past", loesung: w.p, streng: true,
+                 platzhalter: anzahl > 1 ? `Simple past – ${anzahl} Formen` : "Simple past" };
+  return vonA
+    ? [ past, { name: KONFIG.spracheB, loesung: w.b.join(", "), streng: false, platzhalter: KONFIG.spracheB } ]
+    : [ { name: "Infinitive", loesung: w.a, streng: true, platzhalter: "Infinitive" }, past ];
+}
+function pruefeForm(eingabe, loesung){
+  const roh = String(eingabe).replace(/[\/&+]/g, " ");
+  const eing = formen(roh);
+  if (!eing.length) return false;
+  return String(loesung).split(/\s*[,;]\s*/).some(alt => {
+    const teile = alt.split("/").map(t => normalisieren(t.replace(/\([^)]*\)/g, " "))).filter(Boolean);
+    if (teile.length <= 1){ const v = formen(alt); return eing.some(e => v.includes(e)); }
+    const woerter = normalisieren(roh).split(" ").filter(x => x && !/^(and|und|or|oder)$/.test(x));
+    return woerter.length === teile.length && teile.every(t => woerter.includes(t));
+  });
 }
 
 /* ============ Sitzung ============ */
@@ -371,6 +409,7 @@ function weiter(){
   const s = S.sitzung;
   s.pos++; s.aufgedeckt = false; s.geprueft = null; s.warte = false; s.aktuelleRichtung = null;
   s.klasseEingabe = ""; s.klasseRichtig = false;
+  s.geschlechtEingabe = ""; s.geschlechtRichtig = false;
   S.ansicht = s.pos >= s.schlange.length ? "ergebnis" : "uebung";
   zeichnen();
 }
@@ -490,7 +529,8 @@ function alleWoerter(){
     <div class="tabelle">`;
   l.woerter.forEach((w,i) => {
     const zeigen = S.spalte === "beide" || S.gezeigt[i];
-    const seiteA = escape_(w.a) + (w.h ? `<span class="gram-klein">${escape_(w.h)}</span>` : "");
+    const seiteA = escape_(w.a) + (w.p ? ` – ${escape_(w.p)}` : "")
+                 + (w.h ? `<span class="gram-klein">${escape_(w.h)}</span>` : "");
     const seiteB = escape_(w.b.join(", ")) + (w.g ? `<span class="gram-klein">${escape_(w.g)}</span>` : "");
     const feld = (inhalt, klasse, weg) => zeigen || !weg
       ? `<span class="${klasse}">${inhalt}</span>`
@@ -509,8 +549,11 @@ function uebung(){
   if (!s.aktuelleRichtung) s.aktuelleRichtung = richtungFuer();
   const vonA = s.aktuelleRichtung === "ab";
   const frage = vonA ? w.a : w.b.join(", ");
-  const loesungen = vonA ? w.b : [w.a];
-  const gram = vonA && w.h ? `<div class="gram">${escape_(w.h)}</div>` : "";
+  const verb = !!w.p;
+  const felder = verb ? verbFelder(w, vonA) : null;
+  const loesungen = verb ? felder.map(f => f.loesung) : vonA ? w.b : [w.a];
+  const geschlechtGefragt = vonA && istGeschlecht(w.h);
+  const gram = vonA && w.h && !geschlechtGefragt ? `<div class="gram">${escape_(w.h)}</div>` : "";
 
   const halte = s.schlange.map((e,i) => {
     let k = "halt";
@@ -535,7 +578,10 @@ function uebung(){
     h += `<div class="karte buehne">
       <div class="hinweis">${escape_(vonA ? KONFIG.spracheA : KONFIG.spracheB)}${eintrag.wiederholung ? " · nochmal" : ""}</div>
       <div class="frage">${escape_(frage)}</div>${gram}
-      ${s.aufgedeckt ? `<div class="antwort">${loesungen.map(x => `<div>${escape_(x)}</div>`).join("")}${
+      ${s.aufgedeckt ? `<div class="antwort">${verb
+        ? verbFelder(w, vonA).map(f => `<div>${escape_(f.loesung)}<span class="feldname">${escape_(f.name)}</span></div>`).join("")
+        : loesungen.map(x => `<div>${escape_(x)}</div>`).join("")}${
+        geschlechtGefragt ? `<div class="gram" style="margin-top:11px">${escape_(w.h)}</div>` : ""}${
         vonA && w.g ? `<div class="gram" style="margin-top:11px">${escape_(w.g)}</div>` : ""}</div>` : ""}
     </div>`;
     h += s.aufgedeckt
@@ -546,7 +592,34 @@ function uebung(){
       : `<button class="knopf" data-aufdecken="1">Antwort zeigen</button>`;
   }
 
-  if (s.modus === "schreiben"){
+  if (s.modus === "schreiben" && verb){
+    h += `<div class="karte buehne">
+      <div class="hinweis">${felder.map(f => escape_(f.name)).join(" + ")}${eintrag.wiederholung ? " · nochmal" : ""}</div>
+      <div class="frage">${escape_(frage)}</div>${gram}
+    </div>`;
+    if (!s.geprueft){
+      h += felder.map((f,i) =>
+        `<label class="feldname-oben" for="feld${i}">${escape_(f.name)}</label>
+         <input type="text" id="feld${i}" data-feld="${i}" autocomplete="off" autocorrect="off"
+                autocapitalize="none" spellcheck="false" placeholder="${escape_(f.platzhalter)}">`).join("");
+      h += `<button class="knopf" data-pruefen="1">Prüfen</button>`;
+    } else {
+      const r = s.geprueft;
+      h += `<div class="pruefliste">`;
+      felder.forEach((f,i) => {
+        const eing = s.eingaben[i] || "", erg = r.felder[i];
+        h += erg === "nein"
+          ? `<div class="pruefzeile nein"><span class="zeichen">&#10007;</span>
+               <span>${escape_(f.loesung)}<small>${escape_(f.name)} · ${eing ? "getippt: " + escape_(eing) : "leer"}</small></span></div>`
+          : `<div class="pruefzeile ok"><span class="zeichen">&#10003;</span>
+               <span>${escape_(f.loesung)}<small>${escape_(f.name)}${erg === "fast" ? " · getippt: " + escape_(eing) : ""}</small></span></div>`;
+      });
+      h += `</div>`;
+      h += r.alleRichtig
+        ? `<div class="rueckmeldung ok">Richtig</div>`
+        : `<button class="knopf" data-weiter="1">Weiter</button>`;
+    }
+  } else if (s.modus === "schreiben"){
     const ziel = vonA ? KONFIG.spracheB : KONFIG.spracheA;
     const klasseGefragt = vonA && !!w.g;
     h += `<div class="karte buehne">
@@ -559,6 +632,10 @@ function uebung(){
         `<input type="text" id="feld${i}" data-feld="${i}" autocomplete="off" autocorrect="off"
                 autocapitalize="none" spellcheck="false"
                 placeholder="${loesungen.length > 1 ? (i+1) + ". Antwort" : escape_(ziel)}">`).join("");
+      if (geschlechtGefragt)
+        h += `<input type="text" id="feldH" autocomplete="off" autocorrect="off"
+                     autocapitalize="none" spellcheck="false"
+                     style="margin-top:5px" placeholder="m., f. oder n.">`;
       if (klasseGefragt)
         h += `<input type="text" id="feldK" autocomplete="off" autocorrect="off"
                      autocapitalize="none" spellcheck="false"
@@ -578,6 +655,14 @@ function uebung(){
         h += `<div class="pruefzeile nein"><span class="zeichen">&#8594;</span>
                 <span>${escape_(loesungen[j])}<small>gefehlt</small></span></div>`;
       });
+      if (geschlechtGefragt){
+        const eingH = s.geschlechtEingabe || "";
+        h += s.geschlechtRichtig
+          ? `<div class="pruefzeile ok"><span class="zeichen">&#10003;</span>
+               <span>${escape_(w.h)}</span></div>`
+          : `<div class="pruefzeile neutral"><span class="zeichen">&#8594;</span>
+               <span>${escape_(w.h)}<small>${eingH ? "getippt: " + escape_(eingH) + " · " : ""}zählt nicht als Fehler</small></span></div>`;
+      }
       if (klasseGefragt){
         const eingK = s.klasseEingabe || "";
         h += s.klasseRichtig
@@ -598,6 +683,8 @@ function uebung(){
   if (erstes){
     erstes.focus();
     const kette = loesungen.map((_,i) => document.getElementById("feld" + i));
+    const hFeld = document.getElementById("feldH");
+    if (hFeld) kette.push(hFeld);
     const kFeld = document.getElementById("feldK");
     if (kFeld) kette.push(kFeld);
     kette.forEach((f,i) => {
@@ -614,10 +701,23 @@ function uebung(){
 function pruefenSchreiben(){
   const s = S.sitzung, w = s.schlange[s.pos].wort;
   const vonA = s.aktuelleRichtung === "ab";
+  if (w.p){
+    const felder = verbFelder(w, vonA);
+    s.eingaben = felder.map((_,i) => (document.getElementById("feld" + i) || {}).value || "");
+    const erg = felder.map((f,i) => f.streng
+      ? (pruefeForm(s.eingaben[i], f.loesung) ? "ok" : "nein")
+      : pruefeAntwort(s.eingaben[i], f.loesung));
+    s.geprueft = { felder: erg, alleRichtig: erg.every(e => e !== "nein") };
+    zeichnen();
+    bewerten(s.geprueft.alleRichtig);
+    return;
+  }
   const loesungen = vonA ? w.b : [w.a];
   s.eingaben = loesungen.map((_,i) => (document.getElementById("feld" + i) || {}).value || "");
   s.klasseEingabe = ((document.getElementById("feldK") || {}).value || "").trim();
   s.klasseRichtig = vonA && w.g ? pruefeKlasse(s.klasseEingabe, w.g) : false;
+  s.geschlechtEingabe = ((document.getElementById("feldH") || {}).value || "").trim();
+  s.geschlechtRichtig = vonA && istGeschlecht(w.h) ? pruefeGeschlecht(s.geschlechtEingabe, w.h) : false;
   s.geprueft = pruefeAlle(s.eingaben, loesungen);
   zeichnen();
   bewerten(s.geprueft.alleRichtig);
@@ -709,10 +809,11 @@ async function ausDatei(){
     let neu = false;
     listen.forEach(o => {
       const eintraege = (o.woerter || o.w || []).map(w => Array.isArray(w)
-        ? { a:w[0], b:w[1], nk:w[2], h:w[3], g:w[4] }
+        ? { a:w[0], b:w[1], nk:w[2], h:w[3], g:w[4], p:w[5] }
         : { a: w.a !== undefined ? w.a : w.en,
             b: w.b !== undefined ? w.b : w.de,
             h: w.hinweis || w.h || "", g: w.grammatik || w.g || "",
+            p: w.p || "",
             nk: w.nurKarten || w.nk });
       if (!eintraege.length) return;
       const l = listeAnlegen(o.titel || o.t || "Liste", eintraege);
